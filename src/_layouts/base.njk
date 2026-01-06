@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>{{ seo.title or title or site.name }}{% if title and not seo.title %} - {{ site.name }}{% endif %}</title>
+  <meta name="description" content="{{ seo.description or description or site.description }}">
+  
+  <link rel="canonical" href="{{ site.url }}{{ page.url }}">
+
+  <meta property="og:type" content="{% if page.url == '/' %}website{% else %}article{% endif %}">
+  <meta property="og:url" content="{{ site.url }}{{ page.url }}">
+  <meta property="og:site_name" content="{{ site.name }}">
+  <meta property="og:title" content="{{ seo.title or title or site.name }}">
+  <meta property="og:description" content="{{ seo.description or description or site.description }}">
+  <meta property="og:image" content="{{ site.url }}{{ seo.image or shareImage or site.defaultImage }}">
+
+  <meta name="bluesky:creator" content="@{{ site.blueskyHandle }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="{{ site.twitterHandle }}">
+  <meta name="twitter:title" content="{{ seo.title or title or site.name }}">
+  <meta name="twitter:description" content="{{ seo.description or description or site.description }}">
+  <meta name="twitter:image" content="{{ site.url }}{{ seo.image or shareImage or site.defaultImage }}">
+
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <nav>
+        <a href="/" class="logo">The Kinky Coder</a>
+        <div class="nav-links">
+          <a href="/">Home</a>
+          <a href="/about">About</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    {{ content | safe }}
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; 2026 The Kinky Coder. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>

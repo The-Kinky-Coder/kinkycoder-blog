@@ -1,0 +1,17 @@
+{# Capture the absolute URL #}
+{% set absolutePageUrl %}{{ site.url }}{{ page.url }}{% endset %}
+
+<link rel="canonical" href="{{ seo.canonical or absolutePageUrl }}">
+
+<meta property="og:site_name" content="{{ site.name }}">
+<meta property="og:title" content="{{ seo.title or title }}">
+<meta property="og:description" content="{{ seo.description or site.description }}">
+<meta property="og:url" content="{{ absolutePageUrl }}">
+<meta property="og:type" content="{% if page.url == '/' %}website{% else %}article{% endif %}">
+<meta property="og:image" content="{{ site.url }}{{ shareImage or site.defaultImage }}">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="{{ site.twitterHandle }}">
+<meta name="twitter:title" content="{{ seo.title or title }}">
+<meta name="twitter:description" content="{{ seo.description or site.description }}">
+<meta name="twitter:image" content="{{ site.url }}{{ shareImage or site.defaultImage }}">

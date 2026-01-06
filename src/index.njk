@@ -1,0 +1,20 @@
+---
+layout: base.njk
+title: Home
+---
+<div class="hero">
+  <p>Thoughts, stories, and ideas</p>
+</div>
+
+<section class="posts-list">
+  <h2>Recent Posts</h2>
+  {% set sortedPosts = collections.post | reverse %}
+  {% for post in sortedPosts %}
+    <article class="post-preview">
+      <h3><a href="{{ post.url }}">{{ post.data.title }}</a></h3>
+      <time datetime="{{ post.data.date }}">{{ post.data.date | readableDate }}</time>
+      <p>{{ post.data.description }}</p>
+      <a href="{{ post.url }}" class="read-more">Read more →</a>
+    </article>
+  {% endfor %}
+</section>
