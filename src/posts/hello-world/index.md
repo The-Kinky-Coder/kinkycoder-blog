@@ -1,7 +1,7 @@
 ---
 title: Hello World!
 date: 2026-01-06 09:00:00
-description: This is my first blog post.
+description: If I had more time, I would have written you a shorter letter...
 layout: post.njk
 tags: post
 permalink: /posts/{{ page.fileSlug }}/

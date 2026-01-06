@@ -24,6 +24,11 @@ module.exports = function (eleventyConfig) {
     });
   });
 
+  // Create a custom collection for posts to ensure the home page updates when posts change
+  eleventyConfig.addCollection("posts", function(collectionApi) {
+    return collectionApi.getFilteredByGlob("src/posts/**/*.md");
+  });
+
   return {
     markdownTemplateEngine: "njk",
     htmlTemplateEngine: "njk",
