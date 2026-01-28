@@ -3,6 +3,7 @@ module.exports = function (eleventyConfig) {
   // Copy static assets
   eleventyConfig.addPassthroughCopy("src/css");
   eleventyConfig.addPassthroughCopy("src/images");
+  eleventyConfig.addPassthroughCopy("src/audio");
   eleventyConfig.addPassthroughCopy("src/posts/**/*.{jpg,jpeg,png,gif,svg,webp}");
   eleventyConfig.addPassthroughCopy("src/robots.txt");
 

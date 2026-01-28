@@ -1,0 +1,31 @@
+---
+title: Hold Music, aka why my ears are bleeding...
+date: 2026-01-28 15:00:00
+description: People need to do hold music better.
+layout: post.njk
+tags: post
+permalink: /posts/{{ page.fileSlug }}/
+---
+### If you are implementing a [Music on Hold](https://en.wikipedia.org/wiki/Music_on_hold) system. Stop! Just stop!
+Every time I have to call a company because of some niche issue has popped up that can't be fixed via chat/email/support ticket I always seem to come away from the call frustrated. Even if I accomplished that I set out to achieve. It's often not the call scripts talk takers have to go through (I get it, those script resolve like 90-95% of the issues callers face), nor the amount of time you're sitting on hold (ok it kinda is, but it's only a side effect of the problem) as I'm fortunate enough where I can just put the call on speakerphone, put the phone on its dock, and carry on with what I am doing until the call is answered.
+
+No, that really drives me up the wall with these calls is the hold music system deployed on most of these systems. The music chosen tends to have a too wide a dynamic range to be transmitted over a traditional phone line and still sound good!
+
+Back in the day of the true analog phone line it wasn't as bad, even with the analog compression phone companies used to squeeze more calls over a single trunk. Then along came mobile phones, which compressed the bandwidth per call even more. But why stop there when you can use G.729 and squeeze a call down to as low as 6.4kbits/s!
+
+Now, compressing a line so much is just about bearable for voice only, but as soon as you pipe anything other than voice down that line it's going to sound like shit!
+
+Today's call wasn't as bad as G.729. Analysing the hold music (yes, I called back and recorded the hold music, No I'm not weird! Your weird!!!) it cuts off ~3.4kHz, so standard PSTN/G7.11 (an 64 kbit/s bitrate) but even then if you use heavily compress the audio it just sounds like shit. Here is a sample of the hold music I was subjected too
+
+<audio controls style="width: 100%">
+  <source src="/audio/CallRecording.m4a" type="audio/mp4">
+  Your browser does not support the audio element.
+</audio>
+
+I _think_ that's supposed to be [Opus No. 1 by Tim Carleton](https://www.youtube.com/watch?v=N7xn5zeJ4D4) but the recording just butchers it so much I dunno what's real anymore.
+
+If you are ever setting up a PBX and putting hold music on the system, For the love of the Emperor, listen to how the hold music sounds on a real call before inflicting that onto others! A good baseline should be if you can manage to listen to it, from a phones' loudspeaker, for longer than an hour without having the urge to yeet the phone into next week, you are on the right track on tuning everything to sound about right. But here's the thing, We leave in the world of cheap PBX systems, heck you can spin up FreePBX for the cost of just learning the thing! We live in a world where we can give callers options, hell they are imposed on them enough in the form of menu tree when they first call in, why not use the same tech to offer the caller the option to select which hold music they will have to listen too? Why not give them the option to turn it off completely and just have an occasional beep to let the caller know they are still on the call. Hell you will get extra brownie points if you tie that in with caller line identification and save the callers' preference for next time they have to call in.
+
+We can do better! Take some pride! PBX's should be like good VFX. If the caller leaves the call not noticing the PBX system, it on the right track.
+
+Anyway, I'm gonna stop venting now, I've got to help my step-brother out in 30 mins dealing with a screw-up Vermin Media did (I know, I'm as shocked as you are), so I have to prep myself for another bombardment of hold music! Wish me luck...
