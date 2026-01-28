@@ -52,10 +52,147 @@
 <p>Back in the day of the true analog phone line it wasn't as bad, even with the analog compression phone companies used to squeeze more calls over a single trunk. Then along came mobile phones, which compressed the bandwidth per call even more. But why stop there when you can use G.729 and squeeze a call down to as low as 6.4kbits/s!</p>
 <p>Now, compressing a line so much is just about bearable for voice only, but as soon as you pipe anything other than voice down that line it's going to sound like shit!</p>
 <p>Today's call wasn't as bad as G.729. Analysing the hold music (yes, I called back and recorded the hold music, No I'm not weird! Your weird!!!) it cuts off ~3.4kHz, so standard PSTN/G7.11 (an 64 kbit/s bitrate) but even then if you use heavily compress the audio it just sounds like shit. Here is a sample of the hold music I was subjected too</p>
-<audio controls style="width: 100%">
-  <source src="/audio/CallRecording.m4a" type="audio/mp4">
-  Your browser does not support the audio element.
-</audio>
+<div id="audio-apqzoh" class="audio-player">
+  <button id="audio-apqzoh-btn" class="play-btn" aria-label="Play/Pause">
+      <svg id="audio-apqzoh-play" viewBox="0 0 24 24" fill="currentColor" width="56" height="56"><path d="M8 5v14l11-7z"/></svg>
+      <svg id="audio-apqzoh-pause" viewBox="0 0 24 24" fill="currentColor" width="56" height="56" style="display: none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+  </button>
+  <div class="waveform-container">
+      <div id="audio-apqzoh-waveform"></div>
+      <div class="track-info">
+          <span class="filename" title="CallRecording.m4a">CallRecording.m4a</span>
+          <a href="/audio/CallRecording.m4a" download class="download-link">
+              <svg class="download-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download
+          </a>
+          <span class="time"><span id="audio-apqzoh-current">0:00</span> / <span id="audio-apqzoh-total">0:00</span></span>
+          <div class="volume-control">
+              <button id="audio-apqzoh-mute" class="volume-btn" aria-label="Mute/Unmute" title="Mute/Unmute">
+                <svg id="audio-apqzoh-vol-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+                <svg id="audio-apqzoh-mute-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" style="display: none;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
+              </button>
+              <input type="range" id="audio-apqzoh-volume" class="volume-slider" min="0" max="1" step="0.05" value="1" aria-label="Volume">
+          </div>
+      </div>
+  </div>
+</div>
+<script type="module">
+  import WaveSurfer from 'https://unpkg.com/wavesurfer.js@7/dist/wavesurfer.esm.js'
+
+  const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const waveColor = isDarkMode ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.2)';
+
+  const wavesurfer = WaveSurfer.create({
+      container: '#audio-apqzoh-waveform',
+      waveColor: waveColor,
+      progressColor: '#f50',
+      url: '/audio/CallRecording.m4a',
+      height: 60,
+      barWidth: 3,
+      barGap: 2,
+      barRadius: 3,
+      cursorColor: '#f50',
+      cursorWidth: 1,
+      normalize: true,
+  })
+
+  // Controls
+  const playPauseBtn = document.getElementById('audio-apqzoh-btn')
+  const playIcon = document.getElementById('audio-apqzoh-play')
+  const pauseIcon = document.getElementById('audio-apqzoh-pause')
+  const currentTime = document.getElementById('audio-apqzoh-current')
+  const totalDuration = document.getElementById('audio-apqzoh-total')
+  
+  // Volume controls
+  const volumeSlider = document.getElementById('audio-apqzoh-volume')
+  const muteBtn = document.getElementById('audio-apqzoh-mute')
+  const volIcon = document.getElementById('audio-apqzoh-vol-icon')
+  const muteIcon = document.getElementById('audio-apqzoh-mute-icon')
+  let lastVolume = 1
+
+  playPauseBtn.addEventListener('click', () => {
+      wavesurfer.playPause()
+  })
+
+  wavesurfer.on('play', () => {
+      playIcon.style.display = 'none'
+      pauseIcon.style.display = 'block'
+  })
+
+  wavesurfer.on('pause', () => {
+      playIcon.style.display = 'block'
+      pauseIcon.style.display = 'none'
+  })
+  
+  // Volume interactions
+  const updateSlider = (value) => {
+      const percentage = value * 100
+      volumeSlider.style.background = `linear-gradient(to right, #f50 ${percentage}%, var(--border, #dee2e6) ${percentage}%)`
+  }
+
+  // Initialize slider background
+  // The browser might persist the slider value on refresh, so we must read the actual value
+  updateSlider(volumeSlider.value)
+
+  volumeSlider.addEventListener('input', (e) => {
+      const value = parseFloat(e.target.value)
+      wavesurfer.setVolume(value)
+      lastVolume = value
+      updateMuteIcon(value === 0)
+      updateSlider(value)
+  })
+  
+  muteBtn.addEventListener('click', () => {
+      const currentVolume = wavesurfer.getVolume() // This returns the *current* volume (0-1)
+      
+      if (currentVolume > 0) {
+          // Mute
+          lastVolume = currentVolume
+          wavesurfer.setVolume(0)
+          volumeSlider.value = 0
+          updateMuteIcon(true)
+          updateSlider(0)
+      } else {
+          // Unmute (restore last volume or default to 1)
+          const newVolume = lastVolume || 1 
+          wavesurfer.setVolume(newVolume)
+          volumeSlider.value = newVolume
+          updateMuteIcon(false)
+          updateSlider(newVolume)
+      }
+  })
+  
+  function updateMuteIcon(isMuted) {
+      if (isMuted) {
+          volIcon.style.display = 'none'
+          muteIcon.style.display = 'block'
+      } else {
+          volIcon.style.display = 'block'
+          muteIcon.style.display = 'none'
+      }
+  }
+
+  const formatTime = (seconds) => {
+      const minutes = Math.floor(seconds / 60)
+      const secondsRemainder = Math.floor(seconds % 60)
+      const paddedSeconds = secondsRemainder < 10 ? `0${secondsRemainder}` : secondsRemainder
+      return `${minutes}:${paddedSeconds}`
+  }
+
+  wavesurfer.on('decode', (duration) => {
+      totalDuration.textContent = formatTime(duration)
+  })
+
+  wavesurfer.on('timeupdate', (currentTimeSeconds) => {
+      currentTime.textContent = formatTime(currentTimeSeconds)
+  })
+  
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+      wavesurfer.setOptions({
+          waveColor: event.matches ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.2)'
+      });
+  });
+</script>
 <p>I <em>think</em> that's supposed to be <a href="https://www.youtube.com/watch?v=N7xn5zeJ4D4" target="_blank" rel="noopener">Opus No. 1 by Tim Carleton</a> but the recording just butchers it so much I dunno what's real anymore.</p>
 <p>If you are ever setting up a PBX and putting hold music on the system, For the love of the Emperor, listen to how the hold music sounds on a real call before inflicting that onto others! A good baseline should be if you can manage to listen to it, from a phones' loudspeaker, for longer than an hour without having the urge to yeet the phone into next week, you are on the right track on tuning everything to sound about right. But here's the thing, We leave in the world of cheap PBX systems, heck you can spin up FreePBX for the cost of just learning the thing! We live in a world where we can give callers options, hell they are imposed on them enough in the form of menu tree when they first call in, why not use the same tech to offer the caller the option to select which hold music they will have to listen too? Why not give them the option to turn it off completely and just have an occasional beep to let the caller know they are still on the call. Hell you will get extra brownie points if you tie that in with caller line identification and save the callers' preference for next time they have to call in.</p>
 <p>We can do better! Take some pride! PBX's should be like good VFX. If the caller leaves the call not noticing the PBX system, it on the right track.</p>
