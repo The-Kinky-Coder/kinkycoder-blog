@@ -2,6 +2,7 @@
 // Import markdown-it and the attributes plugin
 const markdownIt = require("markdown-it");
 const markdownItAttrs = require("markdown-it-attrs"); // Ensure this matches the package name
+const path = require("path");
 
 module.exports = function (eleventyConfig) {
   // Configure Markdown-it with the attributes plugin
@@ -45,6 +46,17 @@ module.exports = function (eleventyConfig) {
   // Create a custom collection for posts to ensure the home page updates when posts change
   eleventyConfig.addCollection("posts", function(collectionApi) {
     return collectionApi.getFilteredByGlob("src/posts/**/*.md");
+  });
+
+  // Watch the shortcodes directory for changes
+  eleventyConfig.addWatchTarget("./src/_includes/shortcodes/");
+
+  // Audio player shortcode with dynamic require for hot reloading
+  eleventyConfig.addShortcode("audio", function(url) {
+    const shortcodePath = path.resolve(__dirname, "src/_includes/shortcodes/audio.js");
+    delete require.cache[shortcodePath];
+    const audioShortcode = require(shortcodePath);
+    return audioShortcode(url);
   });
 
   return {

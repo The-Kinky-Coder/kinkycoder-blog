@@ -17,10 +17,7 @@ Now, compressing a line so much is just about bearable for voice only, but as so
 
 Today's call wasn't as bad as G.729. Analysing the hold music (yes, I called back and recorded the hold music, No I'm not weird! Your weird!!!) it cuts off ~3.4kHz, so standard PSTN/G7.11 (an 64 kbit/s bitrate) but even then if you use heavily compress the audio it just sounds like shit. Here is a sample of the hold music I was subjected too
 
-<audio controls style="width: 100%">
-  <source src="/audio/CallRecording.m4a" type="audio/mp4">
-  Your browser does not support the audio element.
-</audio>
+{% audio "/audio/CallRecording.m4a" %}
 
 I _think_ that's supposed to be [Opus No. 1 by Tim Carleton](https://www.youtube.com/watch?v=N7xn5zeJ4D4){target="_blank" rel="noopener"} but the recording just butchers it so much I dunno what's real anymore.
 
