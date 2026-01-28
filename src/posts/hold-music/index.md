@@ -26,3 +26,5 @@ If you are ever setting up a PBX and putting hold music on the system, For the l
 We can do better! Take some pride! PBX's should be like good VFX. If the caller leaves the call not noticing the PBX system, it on the right track.
 
 Anyway, I'm gonna stop venting now, I've got to help my step-brother out in 30 mins dealing with a screw-up Vermin Media did (I know, I'm as shocked as you are), so I have to prep myself for another bombardment of hold music! Wish me luck...
+
+EDIT: Yeah I know, I'm pulling a [Tom Scott](https://www.youtube.com/watch?v=w2A8q3XIhu0){target="_blank" rel="noopener"} (Actually Tom says it better than I did). I just needed to vent OK!
