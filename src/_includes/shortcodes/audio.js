@@ -44,7 +44,8 @@ module.exports = function(url) {
       barGap: 2,
       barRadius: 3,
       cursorColor: '#f50',
-      cursorWidth: 1,
+      cursorWidth: 2,
+      dragToSeek: true,
       normalize: true,
   };
 
