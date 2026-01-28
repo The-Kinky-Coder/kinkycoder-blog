@@ -29,12 +29,12 @@ module.exports = function(url) {
 </div>
 
 <script type="module">
-  import WaveSurfer from 'https://unpkg.com/wavesurfer.js@7/dist/wavesurfer.esm.js'
+  import WaveSurfer from '/js/wavesurfer.esm.js'
 
   const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
   const waveColor = isDarkMode ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.2)';
 
-  const wavesurfer = WaveSurfer.create({
+  const commonOptions = {
       container: '#${id}-waveform',
       waveColor: waveColor,
       progressColor: '#f50',
@@ -46,104 +46,135 @@ module.exports = function(url) {
       cursorColor: '#f50',
       cursorWidth: 1,
       normalize: true,
-  })
+  };
 
-  // Controls
-  const playPauseBtn = document.getElementById('${id}-btn')
-  const playIcon = document.getElementById('${id}-play')
-  const pauseIcon = document.getElementById('${id}-pause')
-  const currentTime = document.getElementById('${id}-current')
-  const totalDuration = document.getElementById('${id}-total')
-  
-  // Volume controls
-  const volumeSlider = document.getElementById('${id}-volume')
-  const muteBtn = document.getElementById('${id}-mute')
-  const volIcon = document.getElementById('${id}-vol-icon')
-  const muteIcon = document.getElementById('${id}-mute-icon')
-  let lastVolume = 1
+  function initPlayer(extraOptions = {}) {
+      const options = { ...commonOptions, ...extraOptions };
+      const wavesurfer = WaveSurfer.create(options);
 
-  playPauseBtn.addEventListener('click', () => {
-      wavesurfer.playPause()
-  })
-
-  wavesurfer.on('play', () => {
-      playIcon.style.display = 'none'
-      pauseIcon.style.display = 'block'
-  })
-
-  wavesurfer.on('pause', () => {
-      playIcon.style.display = 'block'
-      pauseIcon.style.display = 'none'
-  })
-  
-  // Volume interactions
-  const updateSlider = (value) => {
-      const percentage = value * 100
-      volumeSlider.style.background = \`linear-gradient(to right, #f50 \${percentage}%, var(--border, #dee2e6) \${percentage}%)\`
-  }
-
-  // Initialize slider background
-  // The browser might persist the slider value on refresh, so we must read the actual value
-  updateSlider(volumeSlider.value)
-
-  volumeSlider.addEventListener('input', (e) => {
-      const value = parseFloat(e.target.value)
-      wavesurfer.setVolume(value)
-      lastVolume = value
-      updateMuteIcon(value === 0)
-      updateSlider(value)
-  })
-  
-  muteBtn.addEventListener('click', () => {
-      const currentVolume = wavesurfer.getVolume() // This returns the *current* volume (0-1)
+      // Controls
+      const playPauseBtn = document.getElementById('${id}-btn')
+      const playIcon = document.getElementById('${id}-play')
+      const pauseIcon = document.getElementById('${id}-pause')
+      const currentTime = document.getElementById('${id}-current')
+      const totalDuration = document.getElementById('${id}-total')
       
-      if (currentVolume > 0) {
-          // Mute
-          lastVolume = currentVolume
-          wavesurfer.setVolume(0)
-          volumeSlider.value = 0
-          updateMuteIcon(true)
-          updateSlider(0)
-      } else {
-          // Unmute (restore last volume or default to 1)
-          const newVolume = lastVolume || 1 
-          wavesurfer.setVolume(newVolume)
-          volumeSlider.value = newVolume
-          updateMuteIcon(false)
-          updateSlider(newVolume)
+      // Volume controls
+      const volumeSlider = document.getElementById('${id}-volume')
+      const muteBtn = document.getElementById('${id}-mute')
+      const volIcon = document.getElementById('${id}-vol-icon')
+      const muteIcon = document.getElementById('${id}-mute-icon')
+      let lastVolume = 1
+
+      playPauseBtn.addEventListener('click', () => {
+          wavesurfer.playPause()
+      })
+
+      wavesurfer.on('play', () => {
+          playIcon.style.display = 'none'
+          pauseIcon.style.display = 'block'
+      })
+
+      wavesurfer.on('pause', () => {
+          playIcon.style.display = 'block'
+          pauseIcon.style.display = 'none'
+      })
+      
+      // Volume interactions
+      const updateSlider = (value) => {
+          const percentage = value * 100
+          volumeSlider.style.background = \`linear-gradient(to right, #f50 \${percentage}%, var(--border, #dee2e6) \${percentage}%)\`
       }
-  })
-  
-  function updateMuteIcon(isMuted) {
-      if (isMuted) {
-          volIcon.style.display = 'none'
-          muteIcon.style.display = 'block'
-      } else {
-          volIcon.style.display = 'block'
-          muteIcon.style.display = 'none'
+
+      // Initialize slider background
+      updateSlider(volumeSlider.value)
+
+      volumeSlider.addEventListener('input', (e) => {
+          const value = parseFloat(e.target.value)
+          wavesurfer.setVolume(value)
+          lastVolume = value
+          updateMuteIcon(value === 0)
+          updateSlider(value)
+      })
+      
+      muteBtn.addEventListener('click', () => {
+          const currentVolume = wavesurfer.getVolume()
+          
+          if (currentVolume > 0) {
+              lastVolume = currentVolume
+              wavesurfer.setVolume(0)
+              volumeSlider.value = 0
+              updateMuteIcon(true)
+              updateSlider(0)
+          } else {
+              const newVolume = lastVolume || 1 
+              wavesurfer.setVolume(newVolume)
+              volumeSlider.value = newVolume
+              updateMuteIcon(false)
+              updateSlider(newVolume)
+          }
+      })
+      
+      function updateMuteIcon(isMuted) {
+          if (isMuted) {
+              volIcon.style.display = 'none'
+              muteIcon.style.display = 'block'
+          } else {
+              volIcon.style.display = 'block'
+              muteIcon.style.display = 'none'
+          }
       }
-  }
 
-  const formatTime = (seconds) => {
-      const minutes = Math.floor(seconds / 60)
-      const secondsRemainder = Math.floor(seconds % 60)
-      const paddedSeconds = secondsRemainder < 10 ? \`0\${secondsRemainder}\` : secondsRemainder
-      return \`\${minutes}:\${paddedSeconds}\`
-  }
+      const formatTime = (seconds) => {
+          const minutes = Math.floor(seconds / 60)
+          const secondsRemainder = Math.floor(seconds % 60)
+          const paddedSeconds = secondsRemainder < 10 ? \`0\${secondsRemainder}\` : secondsRemainder
+          return \`\${minutes}:\${paddedSeconds}\`
+      }
 
-  wavesurfer.on('decode', (duration) => {
-      totalDuration.textContent = formatTime(duration)
-  })
+      // Depending on whether we have peaks or not, decode event might behave differently
+      // But 'ready' usually fires. 'decode' fires when audio is decoded.
+      // If peaks are provided, 'decode' might NOT fire immediately if we don't load audio?
+      // WaveSurfer v7: If peaks, it simulates a decode? 
+      // Actually, let's listen to 'ready' (waveform drawn) and 'decode' (audio ready)
+      
+      wavesurfer.on('decode', (duration) => {
+          totalDuration.textContent = formatTime(duration)
+      })
 
-  wavesurfer.on('timeupdate', (currentTimeSeconds) => {
-      currentTime.textContent = formatTime(currentTimeSeconds)
-  })
-  
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
-      wavesurfer.setOptions({
-          waveColor: event.matches ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.2)'
+      wavesurfer.on('ready', (duration) => {
+          totalDuration.textContent = formatTime(duration)
+      })
+
+      wavesurfer.on('timeupdate', (currentTimeSeconds) => {
+          currentTime.textContent = formatTime(currentTimeSeconds)
+      })
+      
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+          wavesurfer.setOptions({
+              waveColor: event.matches ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.2)'
+          });
       });
-  });
+  }
+
+  // Try to load peaks
+  const jsonUrl = '${url}'.replace(/\.[^/.]+$/, ".json");
+
+  fetch(jsonUrl)
+    .then(response => {
+        if (!response.ok) throw new Error('No peaks');
+        return response.json();
+    })
+    .then(data => {
+        if (data && data.data) {
+            initPlayer({ peaks: [data.data] });
+        } else {
+            initPlayer();
+        }
+    })
+    .catch((e) => {
+        initPlayer();
+    });
 </script>
   `;
 };
