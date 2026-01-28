@@ -22,7 +22,7 @@ Today's call wasn't as bad as G.729. Analysing the hold music (yes, I called bac
   Your browser does not support the audio element.
 </audio>
 
-I _think_ that's supposed to be <a href="https://www.youtube.com/watch?v=N7xn5zeJ4D4" target="_blank" rel="noopener noreferrer">Opus No. 1 by Tim Carleton</a> but the recording just butchers it so much I dunno what's real anymore.
+I _think_ that's supposed to be [Opus No. 1 by Tim Carleton](https://www.youtube.com/watch?v=N7xn5zeJ4D4){target="_blank" rel="noopener"} but the recording just butchers it so much I dunno what's real anymore.
 
 If you are ever setting up a PBX and putting hold music on the system, For the love of the Emperor, listen to how the hold music sounds on a real call before inflicting that onto others! A good baseline should be if you can manage to listen to it, from a phones' loudspeaker, for longer than an hour without having the urge to yeet the phone into next week, you are on the right track on tuning everything to sound about right. But here's the thing, We leave in the world of cheap PBX systems, heck you can spin up FreePBX for the cost of just learning the thing! We live in a world where we can give callers options, hell they are imposed on them enough in the form of menu tree when they first call in, why not use the same tech to offer the caller the option to select which hold music they will have to listen too? Why not give them the option to turn it off completely and just have an occasional beep to let the caller know they are still on the call. Hell you will get extra brownie points if you tie that in with caller line identification and save the callers' preference for next time they have to call in.
 

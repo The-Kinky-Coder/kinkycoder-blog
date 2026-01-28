@@ -1,5 +1,21 @@
 // eleventy.config.js
+// Import markdown-it and the attributes plugin
+const markdownIt = require("markdown-it");
+const markdownItAttrs = require("markdown-it-attrs"); // Ensure this matches the package name
+
 module.exports = function (eleventyConfig) {
+  // Configure Markdown-it with the attributes plugin
+  let options = {
+    html: true, // Allows HTML tags in markdown
+    breaks: true,
+    linkify: true
+  };
+  
+  let markdownLib = markdownIt(options).use(markdownItAttrs);
+  
+  // Tell Eleventy to use this specific library instance
+  eleventyConfig.setLibrary("md", markdownLib);
+
   // Copy static assets
   eleventyConfig.addPassthroughCopy("src/css");
   eleventyConfig.addPassthroughCopy("src/images");
