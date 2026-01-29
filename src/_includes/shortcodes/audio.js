@@ -1,13 +1,16 @@
 module.exports = function(url) {
+  // Generate a static ID for this build
   const id = "audio-" + Math.random().toString(36).substring(7);
   const filename = url.split('/').pop();
+  
+  // We add 'data-url' so our JS can find the file later
   return `
-<div id="${id}" class="audio-player">
+<div id="${id}" class="audio-player" data-url="${url}">
   <button id="${id}-btn" class="play-btn" aria-label="Play/Pause">
       <svg id="${id}-play" viewBox="0 0 24 24" fill="currentColor" width="56" height="56"><path d="M8 5v14l11-7z"/></svg>
       <svg id="${id}-pause" viewBox="0 0 24 24" fill="currentColor" width="56" height="56" style="display: none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
   </button>
-  
+   
   <div class="waveform-container">
       <div id="${id}-waveform"></div>
       <div class="track-info">
@@ -26,156 +29,5 @@ module.exports = function(url) {
           </div>
       </div>
   </div>
-</div>
-
-<script type="module">
-  import WaveSurfer from '/js/wavesurfer.esm.js'
-
-  const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const waveColor = isDarkMode ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.2)';
-
-  const commonOptions = {
-      container: '#${id}-waveform',
-      waveColor: waveColor,
-      progressColor: '#f50',
-      url: '${url}',
-      height: 60,
-      barWidth: 3,
-      barGap: 2,
-      barRadius: 3,
-      cursorColor: '#f50',
-      cursorWidth: 2,
-      dragToSeek: true,
-      normalize: true,
-  };
-
-  function initPlayer(extraOptions = {}) {
-      const options = { ...commonOptions, ...extraOptions };
-      const wavesurfer = WaveSurfer.create(options);
-
-      // Controls
-      const playPauseBtn = document.getElementById('${id}-btn')
-      const playIcon = document.getElementById('${id}-play')
-      const pauseIcon = document.getElementById('${id}-pause')
-      const currentTime = document.getElementById('${id}-current')
-      const totalDuration = document.getElementById('${id}-total')
-      
-      // Volume controls
-      const volumeSlider = document.getElementById('${id}-volume')
-      const muteBtn = document.getElementById('${id}-mute')
-      const volIcon = document.getElementById('${id}-vol-icon')
-      const muteIcon = document.getElementById('${id}-mute-icon')
-      let lastVolume = 1
-
-      playPauseBtn.addEventListener('click', () => {
-          wavesurfer.playPause()
-      })
-
-      wavesurfer.on('play', () => {
-          playIcon.style.display = 'none'
-          pauseIcon.style.display = 'block'
-      })
-
-      wavesurfer.on('pause', () => {
-          playIcon.style.display = 'block'
-          pauseIcon.style.display = 'none'
-      })
-      
-      // Volume interactions
-      const updateSlider = (value) => {
-          const percentage = value * 100
-          volumeSlider.style.background = \`linear-gradient(to right, #f50 \${percentage}%, var(--border, #dee2e6) \${percentage}%)\`
-      }
-
-      // Initialize slider background
-      updateSlider(volumeSlider.value)
-
-      volumeSlider.addEventListener('input', (e) => {
-          const value = parseFloat(e.target.value)
-          wavesurfer.setVolume(value)
-          lastVolume = value
-          updateMuteIcon(value === 0)
-          updateSlider(value)
-      })
-      
-      muteBtn.addEventListener('click', () => {
-          const currentVolume = wavesurfer.getVolume()
-          
-          if (currentVolume > 0) {
-              lastVolume = currentVolume
-              wavesurfer.setVolume(0)
-              volumeSlider.value = 0
-              updateMuteIcon(true)
-              updateSlider(0)
-          } else {
-              const newVolume = lastVolume || 1 
-              wavesurfer.setVolume(newVolume)
-              volumeSlider.value = newVolume
-              updateMuteIcon(false)
-              updateSlider(newVolume)
-          }
-      })
-      
-      function updateMuteIcon(isMuted) {
-          if (isMuted) {
-              volIcon.style.display = 'none'
-              muteIcon.style.display = 'block'
-          } else {
-              volIcon.style.display = 'block'
-              muteIcon.style.display = 'none'
-          }
-      }
-
-      const formatTime = (seconds) => {
-          const minutes = Math.floor(seconds / 60)
-          const secondsRemainder = Math.floor(seconds % 60)
-          const paddedSeconds = secondsRemainder < 10 ? \`0\${secondsRemainder}\` : secondsRemainder
-          return \`\${minutes}:\${paddedSeconds}\`
-      }
-
-      // Depending on whether we have peaks or not, decode event might behave differently
-      // But 'ready' usually fires. 'decode' fires when audio is decoded.
-      // If peaks are provided, 'decode' might NOT fire immediately if we don't load audio?
-      // WaveSurfer v7: If peaks, it simulates a decode? 
-      // Actually, let's listen to 'ready' (waveform drawn) and 'decode' (audio ready)
-      
-      wavesurfer.on('decode', (duration) => {
-          totalDuration.textContent = formatTime(duration)
-      })
-
-      wavesurfer.on('ready', (duration) => {
-          totalDuration.textContent = formatTime(duration)
-      })
-
-      wavesurfer.on('timeupdate', (currentTimeSeconds) => {
-          currentTime.textContent = formatTime(currentTimeSeconds)
-      })
-      
-      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
-          wavesurfer.setOptions({
-              waveColor: event.matches ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.2)'
-          });
-      });
-  }
-
-  // Try to load peaks
-  const jsonUrl = '${url}'.replace(/\.[^/.]+$/, ".json");
-
-  fetch(jsonUrl)
-    .then(response => {
-        if (!response.ok) throw new Error('No peaks');
-        return response.json();
-    })
-    .then(data => {
-        if (data && data.data) {
-            initPlayer({ peaks: [data.data] });
-        } else {
-            initPlayer();
-        }
-    })
-    .catch((e) => {
-        initPlayer();
-    });
-</script>
-  `;
+</div>`;
 };
