@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="preload" href="/css/style.css" as="style">
-  <style>body{opacity:0}</style>
-  <link rel="stylesheet" href="/css/style.css" onload="document.body.style.opacity=1">
+  <style>
+    {% include "../css/style.css" %}
+    {% if 'class="audio-player"' in content %}
+    {% include "../css/audio-player.css" %}
+    {% endif %}
+  </style>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
