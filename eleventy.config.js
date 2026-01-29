@@ -3,6 +3,8 @@
 const markdownIt = require("markdown-it");
 const markdownItAttrs = require("markdown-it-attrs"); // Ensure this matches the package name
 const path = require("path");
+// At the top with your other requires
+const beautify = require('js-beautify').html;
 
 module.exports = function (eleventyConfig) {
   // Configure Markdown-it with the attributes plugin
@@ -11,9 +13,9 @@ module.exports = function (eleventyConfig) {
     breaks: true,
     linkify: true
   };
-  
+
   let markdownLib = markdownIt(options).use(markdownItAttrs);
-  
+
   // Tell Eleventy to use this specific library instance
   eleventyConfig.setLibrary("md", markdownLib);
 
@@ -45,7 +47,7 @@ module.exports = function (eleventyConfig) {
   });
 
   // Create a custom collection for posts to ensure the home page updates when posts change
-  eleventyConfig.addCollection("posts", function(collectionApi) {
+  eleventyConfig.addCollection("posts", function (collectionApi) {
     return collectionApi.getFilteredByGlob("src/posts/**/*.md");
   });
 
@@ -53,11 +55,30 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addWatchTarget("./src/_includes/shortcodes/");
 
   // Audio player shortcode with dynamic require for hot reloading
-  eleventyConfig.addShortcode("audio", function(url) {
+  eleventyConfig.addShortcode("audio", function (url) {
     const shortcodePath = path.resolve(__dirname, "src/_includes/shortcodes/audio.js");
     delete require.cache[shortcodePath];
     const audioShortcode = require(shortcodePath);
     return audioShortcode(url);
+  });
+
+  // Inside module.exports function, add this transform:
+  eleventyConfig.addTransform("beautify", function (content, outputPath) {
+    if (outputPath && outputPath.endsWith(".html")) {
+      return beautify(content, {
+        indent_size: 2,
+        indent_char: " ",
+        max_preserve_newlines: 1,
+        preserve_newlines: true,
+        end_with_newline: true,
+        wrap_line_length: 0,
+        indent_inner_html: true,
+        unformatted: ['code', 'pre'],  // Removed 'script' from here!
+        content_unformatted: ['code', 'pre'],
+        indent_scripts: "normal"  // Added this!
+      });
+    }
+    return content;
   });
 
   return {

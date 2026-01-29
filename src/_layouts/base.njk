@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+<meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>{{ seo.title or title or site.name }}{% if title and not seo.title %} - {{ site.name }}{% endif %}</title>
@@ -37,15 +37,18 @@
       </nav>
     </div>
   </header>
-
   <main class="container">
     {{ content | safe }}
   </main>
-
   <footer class="site-footer">
     <div class="container">
       <p>&copy; 2026 The Kinky Coder. All rights reserved.</p>
     </div>
   </footer>
+{% include "schema-blogpost.njk" %}
+{% if 'class="audio-player"' in content %}
+<script type="module">
+{% include "audio-player-script.js" %}
+</script>{% endif %}
 </body>
 </html>

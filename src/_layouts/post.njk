@@ -11,26 +11,3 @@ layout: base.njk
     {{ content | safe }}
   </div>
 </article>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "headline": "{{ title }}",
-  "image": [
-    "{{ site.url }}{{ seo.image or shareImage or site.defaultImage }}"
-  ],
-  "datePublished": "{{ date | readableDate }}",
-  "dateModified": "{{ date | readableDate }}",
-  "author": [{
-      "@type": "Person",
-      "name": "{{ site.author }}",
-      "url": "{{ site.url }}"
-    }],
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "{{ site.url }}{{ page.url }}"
-  },
-  "description": "{{ seo.description or description or site.description }}"
-}
-</script>
