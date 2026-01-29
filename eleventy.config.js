@@ -37,6 +37,11 @@ module.exports = function (eleventyConfig) {
     return `<img src="${src}" alt="${alt}" ${width ? `width="${width}"` : ''} loading="lazy">`;
   });
 
+  // Add this with your other filters
+  eleventyConfig.addFilter("isoDate", dateObj => {
+    return new Date(dateObj).toISOString();
+  });
+
   // Date filter for blog posts
   eleventyConfig.addFilter("readableDate", dateObj => {
     return new Date(dateObj).toLocaleDateString('en-US', {

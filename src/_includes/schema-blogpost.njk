@@ -7,8 +7,8 @@
 "image": [
     "{{ site.url }}{{ seo.image or shareImage or site.defaultImage }}"
 ],
-"datePublished": "{{ date | readableDate }}",
-"dateModified": "{{ date | readableDate }}",
+"datePublished": "{{ date | isoDate }}",
+"dateModified": "{{ date | isoDate }}",
 "author": [{
     "@type": "Person",
     "name": "{{ site.author }}",
