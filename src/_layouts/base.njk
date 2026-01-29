@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+  <link rel="preload" href="/css/style.css" as="style">
+  <link rel="stylesheet" href="/css/style.css">
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>{{ seo.title or title or site.name }}{% if title and not seo.title %} - {{ site.name }}{% endif %}</title>
@@ -23,8 +25,6 @@
   <meta name="twitter:description" content="{{ seo.description or description or site.description }}">
   <meta name="twitter:image" content="{{ site.url }}{{ seo.image or shareImage or site.defaultImage }}">
 
-  <link rel="preload" href="/css/style.css" as="style">
-  <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
   <header class="site-header">
