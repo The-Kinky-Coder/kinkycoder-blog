@@ -2,14 +2,466 @@
 <html lang="en">
 
   <head>
-    <link rel="preload" href="/css/style.css" as="style">
     <style>
+      :root {
+        --bg-primary: #ffffff;
+        --bg-secondary: #f8f9fa;
+        --text-primary: #1a1a1a;
+        --text-secondary: #6c757d;
+        --accent: #0066cc;
+        --accent-hover: #0052a3;
+        --border: #dee2e6;
+        --shadow: rgba(0, 0, 0, 0.1);
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg-primary: #1a1a1a;
+          --bg-secondary: #2d2d2d;
+          --text-primary: #e4e4e4;
+          --text-secondary: #a0a0a0;
+          --accent: #4d9fff;
+          --accent-hover: #6db0ff;
+          --border: #404040;
+          --shadow: rgba(0, 0, 0, 0.3);
+        }
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
       body {
-        opacity: 0
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        line-height: 1.6;
+        color: var(--text-primary);
+        background-color: var(--bg-primary);
+        transition: background-color 0.3s ease, color 0.3s ease;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      .container p {
+        margin-bottom: 1rem;
+      }
+
+      /* Header */
+      .site-header {
+        background-color: var(--bg-secondary);
+        border-bottom: 1px solid var(--border);
+        padding: 0.5rem 0;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        backdrop-filter: blur(10px);
+        background-color: rgba(248, 249, 250, 0.9);
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .site-header {
+          background-color: rgba(45, 45, 45, 0.9);
+        }
+      }
+
+      .site-header nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        text-decoration: none;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+      }
+
+      .nav-links a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.2s ease;
+      }
+
+      .nav-links a:hover {
+        color: var(--accent);
+      }
+
+      /* Main content */
+      main {
+        padding: 3rem 0;
+        flex: 1;
+      }
+
+      /* Hero section */
+      .hero {
+        text-align: center;
+        padding-top: 1rem;
+      }
+
+      .hero h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        color: var(--text-primary);
+      }
+
+      .hero p {
+        font-size: 1.25rem;
+        color: var(--text-secondary);
+      }
+
+      /* Posts list */
+      .posts-list h2 {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        color: var(--text-primary);
+      }
+
+      .post-preview {
+        padding: 2rem;
+        margin-bottom: 2rem;
+        background-color: var(--bg-secondary);
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .post-preview:hover {
+        box-shadow: 0 4px 12px var(--shadow);
+      }
+
+      .post-preview h3 {
+        margin-bottom: 0.5rem;
+      }
+
+      .post-preview h3 a {
+        color: var(--text-primary);
+        text-decoration: none;
+        font-size: 1.5rem;
+      }
+
+      .post-preview h3 a:hover {
+        color: var(--accent);
+      }
+
+      .post-preview time {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        display: block;
+        margin-bottom: 1rem;
+      }
+
+      .post-preview p {
+        color: var(--text-secondary);
+        margin-bottom: 1rem;
+      }
+
+      .read-more {
+        color: var(--accent);
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.2s ease;
+      }
+
+      .read-more:hover {
+        color: var(--accent-hover);
+      }
+
+      /* Post page */
+      .post {
+        max-width: 700px;
+        margin: 0 auto;
+      }
+
+      .post-header {
+        margin-top: 0.5rem;
+        /* margin-bottom: 2rem; */
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .post-header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        line-height: 1.2;
+      }
+
+      .post-header time {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+      }
+
+      .post-content {
+        font-size: 1.1rem;
+        line-height: 1.8;
+      }
+
+      .post-content h1,
+      .post-content h2,
+      .post-content h3 {
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        color: var(--text-primary);
+      }
+
+      .post-content h2 {
+        font-size: 1.75rem;
+      }
+
+      .post-content h3 {
+        font-size: 1.4rem;
+      }
+
+      .post-content p {
+        margin-bottom: 1.5rem;
+      }
+
+      .post-content a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      .post-content a:hover {
+        text-decoration: underline;
+      }
+
+      .post-content img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin: 2rem 0;
+      }
+
+      .post-content ul,
+      .post-content ol {
+        margin-bottom: 1.5rem;
+        padding-left: 2rem;
+      }
+
+      .post-content li {
+        margin-bottom: 0.5rem;
+      }
+
+      .post-content code {
+        background-color: var(--bg-secondary);
+        padding: 0.2rem 0.4rem;
+        border-radius: 3px;
+        font-size: 0.9em;
+        font-family: 'Courier New', monospace;
+      }
+
+      .post-content pre {
+        background-color: var(--bg-secondary);
+        padding: 1.5rem;
+        border-radius: 8px;
+        overflow-x: auto;
+        margin-bottom: 1.5rem;
+      }
+
+      .post-content pre code {
+        background-color: transparent;
+        padding: 0;
+      }
+
+      /* Footer */
+      .site-footer {
+        background-color: var(--bg-secondary);
+        border-top: 1px solid var(--border);
+        padding-top: 0.5rem;
+        text-align: center;
+      }
+
+      .site-footer p {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+      }
+
+      /* Mobile responsive */
+      @media (max-width: 768px) {
+        .hero h1 {
+          font-size: 2rem;
+        }
+
+        .hero p {
+          font-size: 1.1rem;
+        }
+
+        .post-header h1 {
+          font-size: 2rem;
+        }
+
+        .post-content {
+          font-size: 1rem;
+        }
+
+        .nav-links {
+          gap: 1rem;
+        }
+
+        .post-preview {
+          padding: 1.5rem;
+        }
+      }
+
+      /* Audio Player Styles */
+      .audio-player {
+        background: var(--bg-secondary, #f8f9fa);
+        border: 1px solid var(--border, #dee2e6);
+        border-radius: 8px;
+        padding: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 1.25rem;
+        margin: 2rem 0;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      }
+
+      .play-btn {
+        background: #f50;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 56px;
+        height: 56px;
+        flex-shrink: 0;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+      }
+
+      .play-btn:hover {
+        transform: scale(1.05);
+        background: #ff6a22;
+        box-shadow: 0 4px 12px rgba(255, 85, 0, 0.3);
+      }
+
+      .waveform-container {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-width: 0;
+      }
+
+      .track-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.75rem;
+        color: var(--text-secondary, #6c757d);
+        margin-top: 8px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      }
+
+      .filename {
+        max-width: 30%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .download-link {
+        color: var(--text-secondary, #6c757d);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        transition: color 0.2s ease;
+        font-size: 0.75rem;
+      }
+
+      .download-link:hover {
+        color: var(--accent, #0066cc);
+        text-decoration: underline;
+      }
+
+      .download-icon {
+        width: 14px;
+        height: 14px;
+      }
+
+      .volume-control {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-left: 0.5rem;
+      }
+
+      .volume-btn {
+        background: none;
+        border: none;
+        color: var(--text-secondary, #6c757d);
+        cursor: pointer;
+        padding: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: color 0.2s ease;
+      }
+
+      .volume-btn:hover {
+        color: var(--text-primary, #1a1a1a);
+      }
+
+      .volume-slider {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 80px;
+        height: 4px;
+        background: var(--border, #dee2e6);
+        border-radius: 2px;
+        outline: none;
+        transition: background 0.2s;
+      }
+
+      .volume-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 12px;
+        height: 12px;
+        background: var(--text-secondary, #6c757d);
+        border-radius: 50%;
+        cursor: pointer;
+        transition: transform 0.1s, background 0.2s;
+      }
+
+      .volume-slider::-moz-range-thumb {
+        width: 12px;
+        height: 12px;
+        background: var(--text-secondary, #6c757d);
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: transform 0.1s, background 0.2s;
+      }
+
+      .volume-slider::-webkit-slider-thumb:hover {
+        transform: scale(1.2);
+        background: var(--accent, #0066cc);
+      }
+
+      .volume-slider::-moz-range-thumb:hover {
+        transform: scale(1.2);
+        background: var(--accent, #0066cc);
       }
 
     </style>
-    <link rel="stylesheet" href="/css/style.css" onload="document.body.style.opacity=1">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -60,17 +512,17 @@
           <p>Back in the day of the true analog phone line it wasn't as bad, even with the analog compression phone companies used to squeeze more calls over a single trunk. Then along came mobile phones, which compressed the bandwidth per call even more. But why stop there when you can use G.729 and squeeze a call down to as low as 6.4kbits/s!</p>
           <p>Now, compressing a line so much is just about bearable for voice only, but as soon as you pipe anything other than voice down that line it's going to sound like shit!</p>
           <p>Today's call wasn't as bad as G.729. Analysing the hold music (yes, I called back and recorded the hold music, No I'm not weird! Your weird!!!) it cuts off ~3.4kHz, so standard PSTN/G7.11 (an 64 kbit/s bitrate) but even then if you use heavily compress the audio it just sounds like shit. Here is a sample of the hold music I was subjected too</p>
-          <div id="audio-yegz9" class="audio-player" data-url="/audio/CallRecording.m4a">
-            <button id="audio-yegz9-btn" class="play-btn" aria-label="Play/Pause">
-              <svg id="audio-yegz9-play" viewBox="0 0 24 24" fill="currentColor" width="56" height="56">
+          <div id="audio-jqnzm8" class="audio-player" data-url="/audio/CallRecording.m4a">
+            <button id="audio-jqnzm8-btn" class="play-btn" aria-label="Play/Pause">
+              <svg id="audio-jqnzm8-play" viewBox="0 0 24 24" fill="currentColor" width="56" height="56">
                 <path d="M8 5v14l11-7z" />
               </svg>
-              <svg id="audio-yegz9-pause" viewBox="0 0 24 24" fill="currentColor" width="56" height="56" style="display: none;">
+              <svg id="audio-jqnzm8-pause" viewBox="0 0 24 24" fill="currentColor" width="56" height="56" style="display: none;">
                 <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
               </svg>
             </button>
             <div class="waveform-container">
-              <div id="audio-yegz9-waveform"></div>
+              <div id="audio-jqnzm8-waveform"></div>
               <div class="track-info">
                 <span class="filename" title="CallRecording.m4a">CallRecording.m4a</span>
                 <a href="/audio/CallRecording.m4a" download class="download-link">
@@ -81,20 +533,20 @@
                   </svg>
                   Download
                 </a>
-                <span class="time"><span id="audio-yegz9-current">0:00</span> / <span id="audio-yegz9-total">0:00</span></span>
+                <span class="time"><span id="audio-jqnzm8-current">0:00</span> / <span id="audio-jqnzm8-total">0:00</span></span>
                 <div class="volume-control">
-                  <button id="audio-yegz9-mute" class="volume-btn" aria-label="Mute/Unmute" title="Mute/Unmute">
-                    <svg id="audio-yegz9-vol-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+                  <button id="audio-jqnzm8-mute" class="volume-btn" aria-label="Mute/Unmute" title="Mute/Unmute">
+                    <svg id="audio-jqnzm8-vol-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
                       <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
                       <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
                     </svg>
-                    <svg id="audio-yegz9-mute-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" style="display: none;">
+                    <svg id="audio-jqnzm8-mute-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" style="display: none;">
                       <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
                       <line x1="23" y1="9" x2="17" y2="15"></line>
                       <line x1="17" y1="9" x2="23" y2="15"></line>
                     </svg>
                   </button>
-                  <input type="range" id="audio-yegz9-volume" class="volume-slider" min="0" max="1" step="0.05" value="1" aria-label="Volume">
+                  <input type="range" id="audio-jqnzm8-volume" class="volume-slider" min="0" max="1" step="0.05" value="1" aria-label="Volume">
                 </div>
               </div>
             </div>
