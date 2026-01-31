@@ -37,6 +37,11 @@ module.exports = function (eleventyConfig) {
     return `<img src="${src}" alt="${alt}" ${width ? `width="${width}"` : ''} loading="lazy">`;
   });
 
+  // custom quote shortcode
+  eleventyConfig.addPairedShortcode("quote", function(content) {
+    return `<blockquote>${content}</blockquote>`;
+  });
+
   // Add this with your other filters
   eleventyConfig.addFilter("isoDate", dateObj => {
     return new Date(dateObj).toISOString();
