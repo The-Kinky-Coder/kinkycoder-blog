@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
 
+Disallow: /debug/
+
 Sitemap: https://kinkycoder.com/sitemap.xml

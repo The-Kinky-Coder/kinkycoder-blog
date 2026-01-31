@@ -3,7 +3,7 @@ title: ChatGPT really pisses me off at times!
 date: 2026-01-31 01:00:00
 description: You committed to buy up 40% of the wests SDRAM supply, and this is the garbage you spew out!?
 layout: post.njk
-tags: post
+tags: [post, ai, rant]
 permalink: /posts/{{ page.fileSlug }}/
 ---
 ## You committed to buy up 40% of the wests SDRAM supply, and this is the garbage you spew out!?

@@ -3,7 +3,7 @@ title: Hold Music, aka why my ears are bleeding...
 date: 2026-01-28 15:00:00
 description: People need to do hold music better.
 layout: post.njk
-tags: post
+tags: [post, rant]
 permalink: /posts/{{ page.fileSlug }}/
 ---
 ## If you are implementing a [Music on Hold](https://en.wikipedia.org/wiki/Music_on_hold) system. Stop! Just stop!

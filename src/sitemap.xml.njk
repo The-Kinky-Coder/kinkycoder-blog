@@ -4,13 +4,26 @@ eleventyExcludeFromCollections: true
 ---
 <?xml version="1.0" encoding="utf-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-{%- for page in collections.all %}
-  {% if page.url %}
-  {% set absoluteUrl %}{{ site.url }}{{ page.url | url }}{% endset %}
+{% set latestPost = collections.posts | reverse | first %}
+{% set sortedPosts = collections.posts | sort(attribute='date', reverse=true) %}
+{% set others = collections.all | rejectattr('url', 'match', '^/posts') | rejectattr('url', 'equalto', '/') %}
+{%- if latestPost %}
   <url>
-    <loc>{{ absoluteUrl }}</loc>
-    <lastmod>{{ page.date.toISOString() }}</lastmod>
+    <loc>{{ site.url }}/</loc>
+    <lastmod>{{ latestPost.data.date.toISOString() }}</lastmod>
+    <priority>1.0</priority>
   </url>
-  {% endif %}
+{%- endif %}
+{%- for post in sortedPosts %}
+  <url>
+    <loc>{{ site.url }}{{ post.url }}</loc>
+    <lastmod>{{ post.data.date.toISOString() }}</lastmod>
+    <priority>0.8</priority>
+  </url>
 {%- endfor %}
+  <url>
+    <loc>https://kinkycoder.com/about/</loc>
+    <lastmod>2026-01-06T12:40:30.253Z</lastmod>
+    <priority>0.5</priority>
+  </url>
 </urlset>

@@ -5,6 +5,7 @@ const markdownItAttrs = require("markdown-it-attrs"); // Ensure this matches the
 const path = require("path");
 // At the top with your other requires
 const beautify = require('js-beautify').html;
+const Image = require("@11ty/eleventy-img");
 
 module.exports = function (eleventyConfig) {
   // Configure Markdown-it with the attributes plugin
@@ -37,6 +38,27 @@ module.exports = function (eleventyConfig) {
     return `<img src="${src}" alt="${alt}" ${width ? `width="${width}"` : ''} loading="lazy">`;
   });
 
+  // Optimized image shortcode with feature flag
+  eleventyConfig.addShortcode("optimizedImage", async function (src, alt, sizes = "100vw") {
+    if (!this.ctx.site.enableImageOptimization) {
+      // Serve original for A/B testing
+      return `<img src="${src}" alt="${alt}" loading="lazy" style="width: 100%; height: auto;">`;
+    }
+    let metadata = await Image(src, {
+      widths: [300, 600, 900],
+      formats: ["webp", "jpeg"],
+      outputDir: "_site/img/",
+      urlPath: "/img/"
+    });
+    let imageAttributes = {
+      alt,
+      sizes,
+      loading: "lazy",
+      decoding: "async",
+    };
+    return Image.generateHTML(metadata, imageAttributes);
+  });
+
   // custom quote shortcode
   eleventyConfig.addPairedShortcode("quote", function(content) {
     return `<blockquote>${content}</blockquote>`;
@@ -55,6 +77,9 @@ module.exports = function (eleventyConfig) {
       day: 'numeric'
     });
   });
+
+  // Concat filter for arrays
+  eleventyConfig.addFilter("concat", (...arrays) => arrays.flat());
 
   // Create a custom collection for posts to ensure the home page updates when posts change
   eleventyConfig.addCollection("posts", function (collectionApi) {

@@ -3,7 +3,7 @@ title: Hello World!
 date: 2026-01-06 09:00:00
 description: If I had more time, I would have written you a shorter letter...
 layout: post.njk
-tags: post
+tags: [post]
 permalink: /posts/{{ page.fileSlug }}/
 ---
 ## If I had more time, I would have written you a shorter letter...
