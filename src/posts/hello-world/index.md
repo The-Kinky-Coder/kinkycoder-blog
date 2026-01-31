@@ -6,7 +6,7 @@ layout: post.njk
 tags: post
 permalink: /posts/{{ page.fileSlug }}/
 ---
-### If I had more time, I would have written you a shorter letter...
+## If I had more time, I would have written you a shorter letter...
 
 Here's the thing. I will often post wall of texts on places like Bluesky. Shocking, I know! The problem is Bluesky isn't designed for long form content. That's not a bad thing just a fact. Problem is when I want to rant or make a LONG post then well it's not the best place to put it. That is one of the reason I decided to make a blog, or something like a blog.
 

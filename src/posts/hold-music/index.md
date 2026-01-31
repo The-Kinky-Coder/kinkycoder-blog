@@ -6,7 +6,7 @@ layout: post.njk
 tags: post
 permalink: /posts/{{ page.fileSlug }}/
 ---
-### If you are implementing a [Music on Hold](https://en.wikipedia.org/wiki/Music_on_hold) system. Stop! Just stop!
+## If you are implementing a [Music on Hold](https://en.wikipedia.org/wiki/Music_on_hold) system. Stop! Just stop!
 Every time I have to call a company because of some niche issue has popped up that can't be fixed via chat/email/support ticket I always seem to come away from the call frustrated. Even if I accomplished that I set out to achieve. It's often not the call scripts talk takers have to go through (I get it, those script resolve like 90-95% of the issues callers face), nor the amount of time you're sitting on hold (ok it kinda is, but it's only a side effect of the problem) as I'm fortunate enough where I can just put the call on speakerphone, put the phone on its dock, and carry on with what I am doing until the call is answered.
 
 No, that really drives me up the wall with these calls is the hold music system deployed on most of these systems. The music chosen tends to have a too wide a dynamic range to be transmitted over a traditional phone line and still sound good!
