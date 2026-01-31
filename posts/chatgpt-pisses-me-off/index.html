@@ -5,23 +5,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Home - The Kinky Coder</title>
-    <meta name="description" content="Just the ramblings of a kinky coder">
+    <title>ChatGPT really pisses me off at times! - The Kinky Coder</title>
+    <meta name="description" content="You committed to buy up 40% of the wests SDRAM supply, and this is the garbage you spew out!?">
 
-    <link rel="canonical" href="https://kinkycoder.com/">
+    <link rel="canonical" href="https://kinkycoder.com/posts/chatgpt-pisses-me-off/">
 
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://kinkycoder.com/">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://kinkycoder.com/posts/chatgpt-pisses-me-off/">
     <meta property="og:site_name" content="The Kinky Coder">
-    <meta property="og:title" content="Home">
-    <meta property="og:description" content="Just the ramblings of a kinky coder">
+    <meta property="og:title" content="ChatGPT really pisses me off at times!">
+    <meta property="og:description" content="You committed to buy up 40% of the wests SDRAM supply, and this is the garbage you spew out!?">
     <meta property="og:image" content="https://kinkycoder.com/css/default-share-image.jpg">
 
     <meta name="bluesky:creator" content="@kinkycoder.com">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@thekinkycoder">
-    <meta name="twitter:title" content="Home">
-    <meta name="twitter:description" content="Just the ramblings of a kinky coder">
+    <meta name="twitter:title" content="ChatGPT really pisses me off at times!">
+    <meta name="twitter:description" content="You committed to buy up 40% of the wests SDRAM supply, and this is the garbage you spew out!?">
     <meta name="twitter:image" content="https://kinkycoder.com/css/default-share-image.jpg">
 
     <style>
@@ -378,42 +378,100 @@
       </div>
     </header>
     <main class="container">
-      <div class="hero">
-        <p>Thoughts, stories, and ideas</p>
-      </div>
+      <article class="post">
+        <header class="post-header">
+          <h1>ChatGPT really pisses me off at times!</h1>
+          <time datetime="2026-01-31T01:00:00.000Z">January 31, 2026</time>
+        </header>
 
-      <section class="posts-list">
-        <h2>Recent Posts</h2>
+        <div class="post-content">
+          <h2>You committed to buy up 40% of the wests SDRAM supply, and this is the garbage you spew out!?</h2>
+          <p>First, let me be clear, I'm not completely Anti AI. I don't like AI Art, putting aside all the copyrighted work such models are trained on, the art in my opinion just looks like shit! But as a coder I do use AI Code Gen a fair bit, and I'm sure I will continue to do so. IMO, AI should be seen as a tool not a replacement.</p>
+          <p>But ChatGPT is just spewing out garbage at this point that I no longer trust it for anything! Heck I don't trust it to even sort a list at this point.</p>
+          <p>I have clear instructions in my personalisation settings telling the bot not to BS me, something along the lines of this:</p>
+          <blockquote>
+            If you are not sure of something ask, or go research it. Don't make stuff up, I need you to NEVER make stuff up, tell me that you don't know! Making stuff up is not helpful, wastes tokens, and leaves me frustrated
+          </blockquote>
+          This was added after it kept spewing out made up crap, and for a time it worked! ChatGPT would go off and check what it was going to say before saying it and cut down most of the chaff. But lately every time I've come away from a chat session pissed off with it that I can't wait for the whole company to go tits up!
+          <p>Latest example which got me to write this down. Asterisk configs! A few months ago I got really great internet at home, so I've been home lab'ing more and more (instead of just spinning up services on a cloud instance somewhere), and my recent experience with crappy hold system made me think &quot;Lets build a good one to so companies an example of how they can be better&quot;. It's been a while since I've deep dived into Asterisk, so I've been doing what every coder does, when in doubt, look it up! This time it was what I thought would be a simple question:</p>
+          <blockquote>
+            When I exit from asterisks' CLI I get a message saying that asterisk is quitting. Is this just a confusing message or is the asterisk service actually stopping and then being restarted by my health script?
+          </blockquote>
+          <p>ChatGPT's response:</p>
+          <blockquote>
+            That message means Asterisk itself is shutting down, not just the CLI.
+            exit in the Asterisk CLI is equivalent to telling the running Asterisk process to terminate. It is not just disconnecting your shell.
+            <p>These lines:</p>
+            <p>Asterisk cleanly ending (0).<br>
+              Executing last minute cleanups<br>
+              Asterisk ending (0).</p>
+            <p>are printed when the main Asterisk process is exiting.</p>
+            <p>So in your setup:</p>
+            <p>You run asterisk -r (or similar) to attach to the CLI.</p>
+            <p>You type exit.</p>
+            <p>Asterisk receives a shutdown request.</p>
+            <p>The process exits.</p>
+            <p>Docker sees PID 1 die.</p>
+            <p>Docker restarts the container.</p>
+            <p>That explains the restart.</p>
+          </blockquote>
+          <p>Problem is, that's all bullshit! It then went off blaming my docker setup, blaming the docker image, blaming how I connect to the CLI from the host, at one point it recommended a change to the docker compose file that would have broken the asterisk setup completely. Sensing BS I asked another AI (cladue) the same question<br>
+            Claude:</p>
+          <blockquote>
+            Looking at your output, this is just the CLI exiting - you are NOT stopping the Asterisk process itself.
+            Here's what's happening:
+            When you run docker exec -it asterisk asterisk -rvvv, you're:
+            <p>Connecting to the already running Asterisk daemon (PID 1 in your container)<br>
+              The -r flag means &quot;remote console&quot; - you're attaching to the running process</p>
+            <p>When you type exit, you're only disconnecting your remote console session. The message &quot;Asterisk cleanly ending (0)&quot; is indeed confusing - it's referring to the CLI session ending, not the Asterisk daemon.<br>
+              Proof: Your Asterisk daemon is running as PID 1 in the container (shown in your output: &quot;currently running on home (pid = 1)&quot;). In Docker, PID 1 is the main process - if it stops, the entire container stops and would restart due to your restart: unless-stopped policy. You'd see container restart events in docker logs asterisk if that were happening.</p>
+          </blockquote>
+          <p>When I have this response back to ChatGPT, it basically called Claude a liar:</p>
+          <blockquote>
+            That other AI’s answer is wrong for your case.
+            <p>It’s giving you the generic Asterisk explanation and ignoring what your output actually shows.</p>
+            <p>Let’s stick strictly to facts from your logs<br>
+              ...<br>
+              I’m not going to sugarcoat it: the other response ignored your actual output and reasoned from assumptions. Yours shows a shutdown path.</p>
+            <p>If you want, I can now help you make it detachable properly — or you can leave it as-is if restarts don’t bother you.</p>
+          </blockquote>
+          It then goes off quoting lines the CLI would say, strings that don't even exist in the source code for the project...
+          <p>It was only after I explicitly told it that I opened up two terminals, had live logs in one, and opened CLI in the other, issued a live reload and exited out of the CLI and gave it a copy of the live logs it finally admitted that Asterisk wasn't restarting, and it was wrong.</p>
+          <p>LLMs don't think, they are basically just fancy autocompletion tools. But what gets me is that due in part of OpenAI's commitment to buy out 40% of the wests supply of RAM is driving up costs for everyone else (great time to get back into home labs right!) and this is the crap it spews out.</p>
+          <p>How the fuck that company is valued over $500 Billion is beyond me! But yeah, fuck this shit I'm out!</p>
 
-        <article class="post-preview">
-          <h3><a href="/posts/chatgpt-pisses-me-off/">ChatGPT really pisses me off at times!</a></h3>
-          <time datetime="Sat Jan 31 2026 01:00:00 GMT+0000 (Coordinated Universal Time)">January 31, 2026</time>
-          <p>You committed to buy up 40% of the wests SDRAM supply, and this is the garbage you spew out!?</p>
-          <a href="/posts/chatgpt-pisses-me-off/" class="read-more">Read more →</a>
-        </article>
-
-        <article class="post-preview">
-          <h3><a href="/posts/hold-music/">Hold Music, aka why my ears are bleeding...</a></h3>
-          <time datetime="Wed Jan 28 2026 15:00:00 GMT+0000 (Coordinated Universal Time)">January 28, 2026</time>
-          <p>People need to do hold music better.</p>
-          <a href="/posts/hold-music/" class="read-more">Read more →</a>
-        </article>
-
-        <article class="post-preview">
-          <h3><a href="/posts/hello-world/">Hello World!</a></h3>
-          <time datetime="Tue Jan 06 2026 09:00:00 GMT+0000 (Coordinated Universal Time)">January 6, 2026</time>
-          <p>If I had more time, I would have written you a shorter letter...</p>
-          <a href="/posts/hello-world/" class="read-more">Read more →</a>
-        </article>
-
-      </section>
-
+        </div>
+      </article>
     </main>
     <footer class="site-footer">
       <div class="container">
         <p>&copy; 2026 The Kinky Coder. All rights reserved.</p>
       </div>
     </footer>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "ChatGPT really pisses me off at times!",
+        "image": [
+          "https://kinkycoder.com/css/default-share-image.jpg"
+        ],
+        "datePublished": "2026-01-31T01:00:00.000Z",
+        "dateModified": "2026-01-31T01:00:00.000Z",
+        "author": [{
+          "@type": "Person",
+          "name": "Kinky Coder",
+          "url": "https://kinkycoder.com"
+        }],
+        "mainEntityOfPage": {
+          "@type": "WebPage",
+          "@id": "https://kinkycoder.com/posts/chatgpt-pisses-me-off/"
+        },
+        "description": "You committed to buy up 40% of the wests SDRAM supply, and this is the garbage you spew out!?"
+      }
+
+    </script>
 
   </body>
 

@@ -148,7 +148,7 @@
 
       /* Posts list */
       .posts-list h2 {
-        font-size: 2rem;
+        font-size: 1.5rem;
         margin-bottom: 0.5rem;
         color: var(--text-primary);
       }
@@ -173,7 +173,7 @@
       .post-preview h3 a {
         color: var(--text-primary);
         text-decoration: none;
-        font-size: 1.5rem;
+        font-size: 1.25rem;
       }
 
       .post-preview h3 a:hover {
@@ -241,11 +241,11 @@
       }
 
       .post-content h2 {
-        font-size: 1.75rem;
+        font-size: 1.5rem;
       }
 
       .post-content h3 {
-        font-size: 1.4rem;
+        font-size: 1.25rem;
       }
 
       .post-content p {
@@ -297,6 +297,28 @@
       .post-content pre code {
         background-color: transparent;
         padding: 0;
+      }
+
+      .post-content p:has(+ blockquote) {
+        margin-bottom: 0.5rem;
+      }
+
+      .post-content blockquote {
+        background-color: var(--bg-secondary);
+        border-left: 4px solid var(--accent);
+        padding: 1.5rem;
+        border-radius: 8px;
+        color: var(--text-secondary);
+        line-height: 1.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .post-content blockquote p {
+        margin-bottom: 1rem;
+      }
+
+      .post-content blockquote p:last-child {
+        margin-bottom: 0;
       }
 
       /* Footer */
@@ -363,7 +385,7 @@
         </header>
 
         <div class="post-content">
-          <h3>If I had more time, I would have written you a shorter letter...</h3>
+          <h2>If I had more time, I would have written you a shorter letter...</h2>
           <p>Here's the thing. I will often post wall of texts on places like Bluesky. Shocking, I know! The problem is Bluesky isn't designed for long form content. That's not a bad thing just a fact. Problem is when I want to rant or make a LONG post then well it's not the best place to put it. That is one of the reason I decided to make a blog, or something like a blog.</p>
           <p>I'll be using this place as somewhere I can write at length about things, or just put some thoughts down, or just rant about things, or talk about the projects I'm working on.</p>
           <p>So yeah. Welcome I guess! (waves)</p>
