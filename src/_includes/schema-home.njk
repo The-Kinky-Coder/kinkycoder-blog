@@ -1,0 +1,26 @@
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "url": "{{ site.url }}",
+  "name": "{{ site.name }}",
+  "alternateName": "The Kinky Coder Blog",
+  "description": "{{ site.description }}",
+  "inLanguage": "en-US",
+  "copyrightYear": "2026",
+  "publisher": {
+      "@type": "Person",
+      "name": "{{ site.author }}",
+      "url": "{{ site.url }}",
+      "sameAs": [
+        "https://twitter.com/{{ site.twitterHandle | replace('@', '') }}",
+        "https://bsky.app/profile/{{ site.blueskyHandle }}"
+      ]
+  },
+  "author": {
+      "@type": "Person",
+      "name": "{{ site.author }}",
+      "url": "{{ site.url }}"
+  }
+}
+</script>

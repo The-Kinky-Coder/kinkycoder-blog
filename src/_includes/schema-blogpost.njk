@@ -1,4 +1,3 @@
-{% if layout == "post.njk" %}
 <script type="application/ld+json">
 {
 "@context": "https://schema.org",
@@ -9,11 +8,25 @@
 ],
 "datePublished": "{{ date | isoDate }}",
 "dateModified": "{{ date | isoDate }}",
+"inLanguage": "en-US",
 "author": [{
     "@type": "Person",
     "name": "{{ site.author }}",
-    "url": "{{ site.url }}"
-    }],
+    "url": "{{ site.url }}",
+    "sameAs": [
+        "https://twitter.com/{{ site.twitterHandle | replace('@', '') }}",
+        "https://bsky.app/profile/{{ site.blueskyHandle }}"
+    ]
+}],
+"publisher": {
+    "@type": "Person",
+    "name": "{{ site.author }}",
+    "url": "{{ site.url }}",
+    "sameAs": [
+        "https://twitter.com/{{ site.twitterHandle | replace('@', '') }}",
+        "https://bsky.app/profile/{{ site.blueskyHandle }}"
+    ]
+},
 "mainEntityOfPage": {
     "@type": "WebPage",
     "@id": "{{ site.url }}{{ page.url }}"
@@ -21,4 +34,3 @@
 "description": "{{ seo.description or description or site.description }}"
 }
 </script>
-{% endif %}

@@ -1,0 +1,7 @@
+{% if layout == "post.njk" %}
+  {% include "schema-blogpost.njk" %}
+{% elif page.url == "/" %}
+  {% include "schema-home.njk" %}
+{% elif page.url == "/about/" %}
+  {% include "schema-about.njk" %}
+{% endif %}

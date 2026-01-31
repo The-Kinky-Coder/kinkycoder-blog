@@ -1,0 +1,24 @@
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  "dateCreated": "2026-01-01",
+  "mainEntity": {
+      "@type": "Person",
+      "name": "{{ site.author }}",
+      "alternateName": "The Kinky Coder",
+      "url": "{{ site.url }}",
+      "image": "{{ site.url }}{{ site.defaultImage }}",
+      "description": "{{ site.description }}",
+      "sameAs": [
+        "https://twitter.com/{{ site.twitterHandle | replace('@', '') }}",
+        "https://bsky.app/profile/{{ site.blueskyHandle }}"
+      ],
+      "knowsAbout": [
+        "Software Development",
+        "Web Development",
+        "11ty"
+      ]
+  }
+}
+</script>

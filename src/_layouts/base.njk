@@ -23,6 +23,8 @@
   <meta name="twitter:description" content="{{ seo.description or description or site.description }}">
   <meta name="twitter:image" content="{{ site.url }}{{ seo.image or shareImage or site.defaultImage }}">
   
+  {% include "schema-conditional.njk" %}
+
   <style>
     {% include "../css/style.css" %}
     {% if 'class="audio-player"' in content %}
@@ -51,7 +53,6 @@
       <p>&copy; 2026 The Kinky Coder. All rights reserved.</p>
     </div>
   </footer>
-{% include "schema-blogpost.njk" %}
 {% if 'class="audio-player"' in content %}
 <script type="module">
 {% include "audio-player-script.js" %}
