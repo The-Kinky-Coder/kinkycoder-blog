@@ -387,6 +387,32 @@
         }
       }
 
+      /* Breadcrumbs */
+      .breadcrumb {
+        list-style: none;
+        padding: 0;
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+      }
+
+      .breadcrumb li {
+        display: inline;
+      }
+
+      .breadcrumb li:not(:last-child)::after {
+        content: " > ";
+        color: var(--text-secondary);
+      }
+
+      .breadcrumb a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      .breadcrumb a:hover {
+        text-decoration: underline;
+      }
+
     </style>
 
   </head>
