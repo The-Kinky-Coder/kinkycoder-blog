@@ -85,4 +85,4 @@ It was only after I explicitly told it that I opened up two terminals, had live 
 
 LLMs don't think, they are basically just fancy autocompletion tools. But what gets me is that due in part of OpenAI's commitment to buy out 40% of the wests supply of RAM is driving up costs for everyone else (great time to get back into home labs right!) and this is the crap it spews out.
 
-How the fuck that company is valued over $500 Billion is beyond me! But yeah, fuck this shit I'm out!
+How the fuck that company is valued over $500 Billion is beyond me! But yeah, fuck this shit I'm out! ChatGPT, I'm breaking up with you. Its not me, its you!
