@@ -1,11 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const { glob } = require('glob');
-const ffmpeg = require('fluent-ffmpeg');
+const { Converter } = require('ffmpeg-stream');
 const ffmpegPath = require('ffmpeg-static');
-
-// Configure ffmpeg
-ffmpeg.setFfmpegPath(ffmpegPath);
 
 // Settings
 const SAMPLES_PER_SECOND = 100; // Resolution of the waveform
@@ -28,58 +25,66 @@ async function generatePeaks(filePath) {
 
     console.log(`Processing ${path.basename(filePath)}...`);
 
-    const stream = ffmpeg(filePath)
-        .format('s16le')   // 16-bit PCM
-        .audioChannels(1)  // Mono
-        .audioFrequency(AUDIO_SAMPLE_RATE)
-        .pipe();
+    return new Promise((resolve, reject) => {
+        const converter = new Converter(ffmpegPath);
+        converter.createInputFromFile(filePath);
+        const stream = converter.createOutputStream({
+            f: 's16le',
+            ac: 1,
+            ar: AUDIO_SAMPLE_RATE
+        });
 
-    const peaks = [];
-    let currentMax = 0;
-    let sampleCount = 0;
+        const peaks = [];
+        let currentMax = 0;
+        let sampleCount = 0;
 
-    // Read stream
-    stream.on('data', (chunk) => {
-        // Chunk is a Buffer of Int16 values (2 bytes each)
-        for (let i = 0; i < chunk.length; i += 2) {
-            // Read Int16 (little endian)
-            const raw = chunk.readInt16LE(i);
-            const abs = Math.abs(raw);
-            
-            if (abs > currentMax) {
-                currentMax = abs;
-            }
-
-            sampleCount++;
-
-            if (sampleCount >= SAMPLES_PER_PEAK) {
-                // Normalize to 0-1 range (INT16 max is 32768)
-                const normalized = Number((currentMax / 32768).toFixed(4));
-                peaks.push(normalized);
+        // Read stream
+        stream.on('data', (chunk) => {
+            // Chunk is a Buffer of Int16 values (2 bytes each)
+            for (let i = 0; i < chunk.length; i += 2) {
+                // Read Int16 (little endian)
+                const raw = chunk.readInt16LE(i);
+                const abs = Math.abs(raw);
                 
-                // Reset
-                currentMax = 0;
-                sampleCount = 0;
+                if (abs > currentMax) {
+                    currentMax = abs;
+                }
+
+                sampleCount++;
+
+                if (sampleCount >= SAMPLES_PER_PEAK) {
+                    // Normalize to 0-1 range (INT16 max is 32768)
+                    const normalized = Number((currentMax / 32768).toFixed(4));
+                    peaks.push(normalized);
+                    
+                    // Reset
+                    currentMax = 0;
+                    sampleCount = 0;
+                }
             }
-        }
-    });
+        });
 
-    stream.on('end', () => {
-        // Save to JSON
-        const data = {
-            version: 1,
-            channels: 1,
-            sample_rate: AUDIO_SAMPLE_RATE,
-            samples_per_pixel: SAMPLES_PER_PEAK,
-            data: peaks
-        };
-        
-        fs.writeFileSync(jsonPath, JSON.stringify(data));
-        console.log(`Saved peaks to ${path.basename(jsonPath)} (${peaks.length} points)`);
-    });
+        stream.on('end', () => {
+            // Save to JSON
+            const data = {
+                version: 1,
+                channels: 1,
+                sample_rate: AUDIO_SAMPLE_RATE,
+                samples_per_pixel: SAMPLES_PER_PEAK,
+                data: peaks
+            };
+            
+            fs.writeFileSync(jsonPath, JSON.stringify(data));
+            console.log(`Saved peaks to ${path.basename(jsonPath)} (${peaks.length} points)`);
+            resolve();
+        });
 
-    stream.on('error', (err) => {
-        console.error(`Error processing ${filePath}:`, err);
+        stream.on('error', (err) => {
+            console.error(`Error processing ${filePath}:`, err);
+            reject(err);
+        });
+
+        converter.run().catch(reject);
     });
 }
 
