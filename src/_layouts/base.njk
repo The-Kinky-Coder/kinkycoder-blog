@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        document.documentElement.setAttribute('data-theme', savedTheme);
+      }
+    })();
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -41,6 +49,18 @@
         <div class="nav-links">
           <a href="/">Home</a>
           <a href="/about">About</a>
+          <div class="theme-switcher-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="theme-icon" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M12 2a10 10 0 0 1 0 20z" fill="currentColor" stroke="none"></path>
+            </svg>
+            <select id="theme-selector" class="theme-selector" aria-label="Select Theme">
+              <option value="system">System</option>
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+              <option value="high-contrast">High Contrast</option>
+            </select>
+          </div>
         </div>
       </nav>
     </div>
@@ -57,5 +77,28 @@
 <script type="module">
 {% include "audio-player-script.js" %}
 </script>{% endif %}
+
+<script>
+  const themeSelector = document.getElementById('theme-selector');
+  const savedTheme = localStorage.getItem('theme');
+
+  // Set initial value
+  if (savedTheme) {
+    themeSelector.value = savedTheme;
+  } else {
+    themeSelector.value = 'system';
+  }
+
+  themeSelector.addEventListener('change', (e) => {
+    const theme = e.target.value;
+    if (theme === 'system') {
+      localStorage.removeItem('theme');
+      document.documentElement.removeAttribute('data-theme');
+    } else {
+      localStorage.setItem('theme', theme);
+      document.documentElement.setAttribute('data-theme', theme);
+    }
+  });
+</script>
 </body>
 </html>
