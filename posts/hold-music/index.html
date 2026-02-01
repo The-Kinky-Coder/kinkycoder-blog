@@ -468,6 +468,18 @@
 
       /* Mobile responsive */
       @media (max-width: 768px) {
+        .site-header nav {
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        .nav-links {
+          width: 100%;
+          justify-content: center;
+          flex-wrap: wrap;
+          gap: 1rem;
+        }
+
         .hero h1 {
           font-size: 2rem;
         }
@@ -705,17 +717,17 @@
           <p>Back in the day of the true analog phone line it wasn't as bad, even with the analog compression phone companies used to squeeze more calls over a single trunk. Then along came mobile phones, which compressed the bandwidth per call even more. But why stop there when you can use G.729 and squeeze a call down to as low as 6.4kbits/s!</p>
           <p>Now, compressing a line so much is just about bearable for voice only, but as soon as you pipe anything other than voice down that line it's going to sound like shit!</p>
           <p>Today's call wasn't as bad as G.729. Analysing the hold music (yes, I called back and recorded the hold music, No I'm not weird! Your weird!!!) it cuts off ~3.4kHz, so standard PSTN/G7.11 (an 64 kbit/s bitrate) but even then if you use heavily compress the audio it just sounds like shit. Here is a sample of the hold music I was subjected too</p>
-          <div id="audio-36a6zf" class="audio-player" data-url="/audio/CallRecording.m4a">
-            <button id="audio-36a6zf-btn" class="play-btn" aria-label="Play/Pause">
-              <svg id="audio-36a6zf-play" viewBox="0 0 24 24" fill="currentColor" width="56" height="56">
+          <div id="audio-nb5ysj" class="audio-player" data-url="/audio/CallRecording.m4a">
+            <button id="audio-nb5ysj-btn" class="play-btn" aria-label="Play/Pause">
+              <svg id="audio-nb5ysj-play" viewBox="0 0 24 24" fill="currentColor" width="56" height="56">
                 <path d="M8 5v14l11-7z" />
               </svg>
-              <svg id="audio-36a6zf-pause" viewBox="0 0 24 24" fill="currentColor" width="56" height="56" style="display: none;">
+              <svg id="audio-nb5ysj-pause" viewBox="0 0 24 24" fill="currentColor" width="56" height="56" style="display: none;">
                 <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
               </svg>
             </button>
             <div class="waveform-container">
-              <div id="audio-36a6zf-waveform"></div>
+              <div id="audio-nb5ysj-waveform"></div>
               <div class="track-info">
                 <span class="filename" title="CallRecording.m4a">CallRecording.m4a</span>
                 <a href="/audio/CallRecording.m4a" download class="download-link">
@@ -726,20 +738,20 @@
                   </svg>
                   Download
                 </a>
-                <span class="time"><span id="audio-36a6zf-current">0:00</span> / <span id="audio-36a6zf-total">0:00</span></span>
+                <span class="time"><span id="audio-nb5ysj-current">0:00</span> / <span id="audio-nb5ysj-total">0:00</span></span>
                 <div class="volume-control">
-                  <button id="audio-36a6zf-mute" class="volume-btn" aria-label="Mute/Unmute" title="Mute/Unmute">
-                    <svg id="audio-36a6zf-vol-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+                  <button id="audio-nb5ysj-mute" class="volume-btn" aria-label="Mute/Unmute" title="Mute/Unmute">
+                    <svg id="audio-nb5ysj-vol-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
                       <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
                       <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
                     </svg>
-                    <svg id="audio-36a6zf-mute-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" style="display: none;">
+                    <svg id="audio-nb5ysj-mute-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" style="display: none;">
                       <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
                       <line x1="23" y1="9" x2="17" y2="15"></line>
                       <line x1="17" y1="9" x2="23" y2="15"></line>
                     </svg>
                   </button>
-                  <input type="range" id="audio-36a6zf-volume" class="volume-slider" min="0" max="1" step="0.05" value="1" aria-label="Volume">
+                  <input type="range" id="audio-nb5ysj-volume" class="volume-slider" min="0" max="1" step="0.05" value="1" aria-label="Volume">
                 </div>
               </div>
             </div>
