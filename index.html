@@ -2,6 +2,15 @@
 <html lang="en">
 
   <head>
+    <script>
+      (function() {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+          document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+      })();
+
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -62,10 +71,12 @@
         --accent-hover: #0052a3;
         --border: #dee2e6;
         --shadow: rgba(0, 0, 0, 0.1);
+        --header-bg: rgba(248, 249, 250, 0.9);
       }
 
+      /* Dark Theme - System Preference */
       @media (prefers-color-scheme: dark) {
-        :root {
+        :root:not([data-theme]) {
           --bg-primary: #1a1a1a;
           --bg-secondary: #2d2d2d;
           --text-primary: #e4e4e4;
@@ -74,7 +85,47 @@
           --accent-hover: #6db0ff;
           --border: #404040;
           --shadow: rgba(0, 0, 0, 0.3);
+          --header-bg: rgba(45, 45, 45, 0.9);
         }
+      }
+
+      /* Dark Theme - Explicit */
+      :root[data-theme="dark"] {
+        --bg-primary: #1a1a1a;
+        --bg-secondary: #2d2d2d;
+        --text-primary: #e4e4e4;
+        --text-secondary: #a0a0a0;
+        --accent: #4d9fff;
+        --accent-hover: #6db0ff;
+        --border: #404040;
+        --shadow: rgba(0, 0, 0, 0.3);
+        --header-bg: rgba(45, 45, 45, 0.9);
+      }
+
+      /* High Contrast Theme */
+      :root[data-theme="high-contrast"] {
+        --bg-primary: #000000;
+        --bg-secondary: #000000;
+        --text-primary: #ffffff;
+        --text-secondary: #ffff00;
+        --accent: #ffff00;
+        --accent-hover: #ffffff;
+        --border: #ffffff;
+        --shadow: none;
+        --header-bg: #000000;
+      }
+
+      /* Explicit Light Theme (re-enforce default if needed over system dark) */
+      :root[data-theme="light"] {
+        --bg-primary: #ffffff;
+        --bg-secondary: #f8f9fa;
+        --text-primary: #1a1a1a;
+        --text-secondary: #495057;
+        --accent: #0066cc;
+        --accent-hover: #0052a3;
+        --border: #dee2e6;
+        --shadow: rgba(0, 0, 0, 0.1);
+        --header-bg: rgba(248, 249, 250, 0.9);
       }
 
       * {
@@ -112,20 +163,13 @@
 
       /* Header */
       .site-header {
-        background-color: var(--bg-secondary);
+        background-color: var(--header-bg);
         border-bottom: 1px solid var(--border);
         padding: 0.5rem 0;
         position: sticky;
         top: 0;
         z-index: 100;
         backdrop-filter: blur(10px);
-        background-color: rgba(248, 249, 250, 0.9);
-      }
-
-      @media (prefers-color-scheme: dark) {
-        .site-header {
-          background-color: rgba(45, 45, 45, 0.9);
-        }
       }
 
       .site-header nav {
@@ -155,6 +199,32 @@
 
       .nav-links a:hover {
         color: var(--accent);
+      }
+
+      .theme-switcher-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .theme-icon {
+        color: var(--text-secondary);
+        /* Ensure icon scales with text if needed, though fixed width/height is set on SVG */
+      }
+
+      .theme-selector {
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        border: 1px solid var(--border);
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+        font-family: inherit;
+        font-size: 0.9rem;
+        cursor: pointer;
+      }
+
+      .theme-selector:focus-visible {
+        outline: 3px solid var(--accent);
       }
 
       /* Main content */
@@ -433,6 +503,18 @@
           <div class="nav-links">
             <a href="/">Home</a>
             <a href="/about">About</a>
+            <div class="theme-switcher-wrapper">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="theme-icon" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M12 2a10 10 0 0 1 0 20z" fill="currentColor" stroke="none"></path>
+              </svg>
+              <select id="theme-selector" class="theme-selector" aria-label="Select Theme">
+                <option value="system">System</option>
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+                <option value="high-contrast">High Contrast</option>
+              </select>
+            </div>
           </div>
         </nav>
       </div>
@@ -475,6 +557,27 @@
       </div>
     </footer>
 
+    <script>
+      const themeSelector = document.getElementById('theme-selector');
+      const savedTheme = localStorage.getItem('theme');
+      // Set initial value
+      if (savedTheme) {
+        themeSelector.value = savedTheme;
+      } else {
+        themeSelector.value = 'system';
+      }
+      themeSelector.addEventListener('change', (e) => {
+        const theme = e.target.value;
+        if (theme === 'system') {
+          localStorage.removeItem('theme');
+          document.documentElement.removeAttribute('data-theme');
+        } else {
+          localStorage.setItem('theme', theme);
+          document.documentElement.setAttribute('data-theme', theme);
+        }
+      });
+
+    </script>
   </body>
 
 </html>

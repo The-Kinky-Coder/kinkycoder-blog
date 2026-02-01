@@ -2,6 +2,15 @@
 <html lang="en">
 
   <head>
+    <script>
+      (function() {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+          document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+      })();
+
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -90,10 +99,12 @@
         --accent-hover: #0052a3;
         --border: #dee2e6;
         --shadow: rgba(0, 0, 0, 0.1);
+        --header-bg: rgba(248, 249, 250, 0.9);
       }
 
+      /* Dark Theme - System Preference */
       @media (prefers-color-scheme: dark) {
-        :root {
+        :root:not([data-theme]) {
           --bg-primary: #1a1a1a;
           --bg-secondary: #2d2d2d;
           --text-primary: #e4e4e4;
@@ -102,7 +113,47 @@
           --accent-hover: #6db0ff;
           --border: #404040;
           --shadow: rgba(0, 0, 0, 0.3);
+          --header-bg: rgba(45, 45, 45, 0.9);
         }
+      }
+
+      /* Dark Theme - Explicit */
+      :root[data-theme="dark"] {
+        --bg-primary: #1a1a1a;
+        --bg-secondary: #2d2d2d;
+        --text-primary: #e4e4e4;
+        --text-secondary: #a0a0a0;
+        --accent: #4d9fff;
+        --accent-hover: #6db0ff;
+        --border: #404040;
+        --shadow: rgba(0, 0, 0, 0.3);
+        --header-bg: rgba(45, 45, 45, 0.9);
+      }
+
+      /* High Contrast Theme */
+      :root[data-theme="high-contrast"] {
+        --bg-primary: #000000;
+        --bg-secondary: #000000;
+        --text-primary: #ffffff;
+        --text-secondary: #ffff00;
+        --accent: #ffff00;
+        --accent-hover: #ffffff;
+        --border: #ffffff;
+        --shadow: none;
+        --header-bg: #000000;
+      }
+
+      /* Explicit Light Theme (re-enforce default if needed over system dark) */
+      :root[data-theme="light"] {
+        --bg-primary: #ffffff;
+        --bg-secondary: #f8f9fa;
+        --text-primary: #1a1a1a;
+        --text-secondary: #495057;
+        --accent: #0066cc;
+        --accent-hover: #0052a3;
+        --border: #dee2e6;
+        --shadow: rgba(0, 0, 0, 0.1);
+        --header-bg: rgba(248, 249, 250, 0.9);
       }
 
       * {
@@ -140,20 +191,13 @@
 
       /* Header */
       .site-header {
-        background-color: var(--bg-secondary);
+        background-color: var(--header-bg);
         border-bottom: 1px solid var(--border);
         padding: 0.5rem 0;
         position: sticky;
         top: 0;
         z-index: 100;
         backdrop-filter: blur(10px);
-        background-color: rgba(248, 249, 250, 0.9);
-      }
-
-      @media (prefers-color-scheme: dark) {
-        .site-header {
-          background-color: rgba(45, 45, 45, 0.9);
-        }
       }
 
       .site-header nav {
@@ -183,6 +227,32 @@
 
       .nav-links a:hover {
         color: var(--accent);
+      }
+
+      .theme-switcher-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .theme-icon {
+        color: var(--text-secondary);
+        /* Ensure icon scales with text if needed, though fixed width/height is set on SVG */
+      }
+
+      .theme-selector {
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        border: 1px solid var(--border);
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+        font-family: inherit;
+        font-size: 0.9rem;
+        cursor: pointer;
+      }
+
+      .theme-selector:focus-visible {
+        outline: 3px solid var(--accent);
       }
 
       /* Main content */
@@ -605,6 +675,18 @@
           <div class="nav-links">
             <a href="/">Home</a>
             <a href="/about">About</a>
+            <div class="theme-switcher-wrapper">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="theme-icon" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M12 2a10 10 0 0 1 0 20z" fill="currentColor" stroke="none"></path>
+              </svg>
+              <select id="theme-selector" class="theme-selector" aria-label="Select Theme">
+                <option value="system">System</option>
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+                <option value="high-contrast">High Contrast</option>
+              </select>
+            </div>
           </div>
         </nav>
       </div>
@@ -623,17 +705,17 @@
           <p>Back in the day of the true analog phone line it wasn't as bad, even with the analog compression phone companies used to squeeze more calls over a single trunk. Then along came mobile phones, which compressed the bandwidth per call even more. But why stop there when you can use G.729 and squeeze a call down to as low as 6.4kbits/s!</p>
           <p>Now, compressing a line so much is just about bearable for voice only, but as soon as you pipe anything other than voice down that line it's going to sound like shit!</p>
           <p>Today's call wasn't as bad as G.729. Analysing the hold music (yes, I called back and recorded the hold music, No I'm not weird! Your weird!!!) it cuts off ~3.4kHz, so standard PSTN/G7.11 (an 64 kbit/s bitrate) but even then if you use heavily compress the audio it just sounds like shit. Here is a sample of the hold music I was subjected too</p>
-          <div id="audio-s1xgh" class="audio-player" data-url="/audio/CallRecording.m4a">
-            <button id="audio-s1xgh-btn" class="play-btn" aria-label="Play/Pause">
-              <svg id="audio-s1xgh-play" viewBox="0 0 24 24" fill="currentColor" width="56" height="56">
+          <div id="audio-36a6zf" class="audio-player" data-url="/audio/CallRecording.m4a">
+            <button id="audio-36a6zf-btn" class="play-btn" aria-label="Play/Pause">
+              <svg id="audio-36a6zf-play" viewBox="0 0 24 24" fill="currentColor" width="56" height="56">
                 <path d="M8 5v14l11-7z" />
               </svg>
-              <svg id="audio-s1xgh-pause" viewBox="0 0 24 24" fill="currentColor" width="56" height="56" style="display: none;">
+              <svg id="audio-36a6zf-pause" viewBox="0 0 24 24" fill="currentColor" width="56" height="56" style="display: none;">
                 <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
               </svg>
             </button>
             <div class="waveform-container">
-              <div id="audio-s1xgh-waveform"></div>
+              <div id="audio-36a6zf-waveform"></div>
               <div class="track-info">
                 <span class="filename" title="CallRecording.m4a">CallRecording.m4a</span>
                 <a href="/audio/CallRecording.m4a" download class="download-link">
@@ -644,20 +726,20 @@
                   </svg>
                   Download
                 </a>
-                <span class="time"><span id="audio-s1xgh-current">0:00</span> / <span id="audio-s1xgh-total">0:00</span></span>
+                <span class="time"><span id="audio-36a6zf-current">0:00</span> / <span id="audio-36a6zf-total">0:00</span></span>
                 <div class="volume-control">
-                  <button id="audio-s1xgh-mute" class="volume-btn" aria-label="Mute/Unmute" title="Mute/Unmute">
-                    <svg id="audio-s1xgh-vol-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+                  <button id="audio-36a6zf-mute" class="volume-btn" aria-label="Mute/Unmute" title="Mute/Unmute">
+                    <svg id="audio-36a6zf-vol-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
                       <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
                       <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
                     </svg>
-                    <svg id="audio-s1xgh-mute-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" style="display: none;">
+                    <svg id="audio-36a6zf-mute-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" style="display: none;">
                       <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
                       <line x1="23" y1="9" x2="17" y2="15"></line>
                       <line x1="17" y1="9" x2="23" y2="15"></line>
                     </svg>
                   </button>
-                  <input type="range" id="audio-s1xgh-volume" class="volume-slider" min="0" max="1" step="0.05" value="1" aria-label="Volume">
+                  <input type="range" id="audio-36a6zf-volume" class="volume-slider" min="0" max="1" step="0.05" value="1" aria-label="Volume">
                 </div>
               </div>
             </div>
@@ -814,6 +896,28 @@
       } else {
         initAudioPlayers();
       }
+
+    </script>
+
+    <script>
+      const themeSelector = document.getElementById('theme-selector');
+      const savedTheme = localStorage.getItem('theme');
+      // Set initial value
+      if (savedTheme) {
+        themeSelector.value = savedTheme;
+      } else {
+        themeSelector.value = 'system';
+      }
+      themeSelector.addEventListener('change', (e) => {
+        const theme = e.target.value;
+        if (theme === 'system') {
+          localStorage.removeItem('theme');
+          document.documentElement.removeAttribute('data-theme');
+        } else {
+          localStorage.setItem('theme', theme);
+          document.documentElement.setAttribute('data-theme', theme);
+        }
+      });
 
     </script>
   </body>
