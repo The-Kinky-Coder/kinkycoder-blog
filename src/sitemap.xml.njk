@@ -6,7 +6,7 @@ eleventyExcludeFromCollections: true
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 {% set latestPost = collections.posts | reverse | first %}
 {% set sortedPosts = collections.posts | sort(attribute='date', reverse=true) %}
-{% set others = collections.all | rejectattr('url', 'match', '^/posts') | rejectattr('url', 'equalto', '/') %}
+{% set others = collections.all | rejectattr('url', 'match', '^/posts') | rejectattr('url', 'equalto', '/') | rejectattr('data.draft') %}
 {%- if latestPost %}
   <url>
     <loc>{{ site.url }}/</loc>

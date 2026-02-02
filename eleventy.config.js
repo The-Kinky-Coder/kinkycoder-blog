@@ -6,8 +6,19 @@ const path = require("path");
 // At the top with your other requires
 const beautify = require('js-beautify').html;
 const Image = require("@11ty/eleventy-img");
+const fs = require("fs"); // Import the file system module
 
 module.exports = function (eleventyConfig) {
+  eleventyConfig.on("eleventy.before", async ({ dir, runMode, outputMode }) => {
+    // Optional: Only clean if we are NOT in 'watch' mode (to save time), 
+    // BUT since you want deletions to reflect immediately, run it always:
+    if (fs.existsSync(dir.output)) {
+      // This is the Node.js equivalent of "rm -rf" that works on Windows
+      fs.rmSync(dir.output, { recursive: true, force: true });
+    }
+    console.log(`[11ty] Cleaned output directory: ${dir.output}`);
+  });
+
   // Configure Markdown-it with the attributes plugin
   let options = {
     html: true, // Allows HTML tags in markdown
@@ -60,7 +71,7 @@ module.exports = function (eleventyConfig) {
   });
 
   // custom quote shortcode
-  eleventyConfig.addPairedShortcode("quote", function(content) {
+  eleventyConfig.addPairedShortcode("quote", function (content) {
     return `<blockquote>${content}</blockquote>`;
   });
 
@@ -80,10 +91,15 @@ module.exports = function (eleventyConfig) {
 
   // Concat filter for arrays
   eleventyConfig.addFilter("concat", (...arrays) => arrays.flat());
-
-  // Create a custom collection for posts to ensure the home page updates when posts change
+  
+  // Collection for blog posts excluding drafts
   eleventyConfig.addCollection("posts", function (collectionApi) {
-    return collectionApi.getFilteredByGlob("src/posts/**/*.md");
+    return collectionApi
+      .getFilteredByGlob("src/posts/**/*.md")
+      .filter(item => {
+        // Logic: If draft is true, skip it. If draft is false or missing, keep it.
+        return item.data.draft !== true;
+      });
   });
 
   // Watch the shortcodes directory for changes
