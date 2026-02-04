@@ -7,7 +7,7 @@ layout: base.njk
     <time datetime="{{ date | isoDate }}">{{ date | readableDate }}</time>
   </header>
   
-  <section class="post-content">
+  <article class="post-content">
     {{ content | safe }}
-  </section>
+  </article>
 </article>
