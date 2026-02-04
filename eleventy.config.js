@@ -3,17 +3,13 @@
 const markdownIt = require("markdown-it");
 const markdownItAttrs = require("markdown-it-attrs"); // Ensure this matches the package name
 const path = require("path");
-// At the top with your other requires
 const beautify = require('js-beautify').html;
 const Image = require("@11ty/eleventy-img");
 const fs = require("fs"); // Import the file system module
 
 module.exports = function (eleventyConfig) {
   eleventyConfig.on("eleventy.before", async ({ dir, runMode, outputMode }) => {
-    // Optional: Only clean if we are NOT in 'watch' mode (to save time), 
-    // BUT since you want deletions to reflect immediately, run it always:
     if (fs.existsSync(dir.output)) {
-      // This is the Node.js equivalent of "rm -rf" that works on Windows
       fs.rmSync(dir.output, { recursive: true, force: true });
     }
     console.log(`[11ty] Cleaned output directory: ${dir.output}`);
@@ -75,7 +71,7 @@ module.exports = function (eleventyConfig) {
     return `<blockquote>${content}</blockquote>`;
   });
 
-  // Add this with your other filters
+  // Filter to convert date objects to ISO 8601 string format
   eleventyConfig.addFilter("isoDate", dateObj => {
     return new Date(dateObj).toISOString();
   });
@@ -91,7 +87,7 @@ module.exports = function (eleventyConfig) {
 
   // Concat filter for arrays
   eleventyConfig.addFilter("concat", (...arrays) => arrays.flat());
-  
+
   // Collection for blog posts excluding drafts
   eleventyConfig.addCollection("posts", function (collectionApi) {
     return collectionApi
@@ -113,7 +109,7 @@ module.exports = function (eleventyConfig) {
     return audioShortcode(url);
   });
 
-  // Inside module.exports function, add this transform:
+  // Transform to beautify HTML output files for improved readability
   eleventyConfig.addTransform("beautify", function (content, outputPath) {
     if (outputPath && outputPath.endsWith(".html")) {
       return beautify(content, {
