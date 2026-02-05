@@ -1,6 +1,7 @@
 ---
-layout: about.njk
+layout: page.njk
 title: About
+date: Last Modified
 ---
 # About Me
 

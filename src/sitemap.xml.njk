@@ -6,7 +6,7 @@ eleventyExcludeFromCollections: true
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 {% set latestPost = collections.posts | reverse | first %}
 {% set sortedPosts = collections.posts | sort(attribute='date', reverse=true) %}
-{% set others = collections.all | rejectattr('url', 'match', '^/posts') | rejectattr('url', 'equalto', '/') | rejectattr('data.draft') %}
+
 {%- if latestPost %}
   <url>
     <loc>{{ site.url }}/</loc>
@@ -14,6 +14,7 @@ eleventyExcludeFromCollections: true
     <priority>1.0</priority>
   </url>
 {%- endif %}
+
 {%- for post in sortedPosts %}
   <url>
     <loc>{{ site.url }}{{ post.url }}</loc>
@@ -21,9 +22,14 @@ eleventyExcludeFromCollections: true
     <priority>0.8</priority>
   </url>
 {%- endfor %}
+
+{%- for page in collections.all %}
+  {%- if page.url and page.url != '/' and (not page.data.tags or 'post' not in page.data.tags) and not page.data.draft %}
   <url>
-    <loc>https://kinkycoder.com/about/</loc>
-    <lastmod>2026-01-06T12:40:30.253Z</lastmod>
+    <loc>{{ site.url }}{{ page.url }}</loc>
+    <lastmod>{{ page.date.toISOString() }}</lastmod>
     <priority>0.5</priority>
   </url>
+  {%- endif %}
+{%- endfor %}
 </urlset>
