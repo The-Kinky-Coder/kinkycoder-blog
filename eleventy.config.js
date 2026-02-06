@@ -39,6 +39,7 @@ module.exports = function (eleventyConfig) {
   // Add watch targets for CSS and post assets
   eleventyConfig.addWatchTarget("src/css/");
   eleventyConfig.addWatchTarget("src/posts/");
+  eleventyConfig.addWatchTarget("src/js/");
 
   // Custom image shortcode
   eleventyConfig.addShortcode("image", function (src, alt, width) {
@@ -69,6 +70,14 @@ module.exports = function (eleventyConfig) {
   // custom quote shortcode
   eleventyConfig.addPairedShortcode("quote", function (content) {
     return `<blockquote>${content}</blockquote>`;
+  });
+
+  // custom codeblock shortcode with Prism.js highlighting
+  eleventyConfig.addPairedShortcode("codeblock", function (content, language, accentColor, lineNumbers, showHeader) {
+    const shortcodePath = path.resolve(__dirname, "src/_includes/shortcodes/codeblock.js");
+    delete require.cache[shortcodePath];
+    const codeblockShortcode = require(shortcodePath);
+    return codeblockShortcode()(content, language, accentColor, lineNumbers, showHeader);
   });
 
   // Filter to convert date objects to ISO 8601 string format

@@ -38,6 +38,9 @@
     {% if 'class="audio-player"' in content %}
     {% include "../css/audio-player.css" %}
     {% endif %}
+    {% if 'class="codeblock"' in content %}
+    {% include "../css/codeblock.css" %}
+    {% endif %}
   </style>
 
 </head>
@@ -77,6 +80,12 @@
 <script type="module">
 {% include "audio-player-script.js" %}
 </script>{% endif %}
+
+{% if 'class="codeblock"' in content %}
+<script>
+{% include "../js/codeblock.js" %}
+</script>
+{% endif %}
 
 <script>
   const themeSelector = document.getElementById('theme-selector');
