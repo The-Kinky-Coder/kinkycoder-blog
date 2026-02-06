@@ -2,7 +2,9 @@
 {
   "@context": "https://schema.org",
   "@type": "ProfilePage",
-  "dateCreated": "2026-01-01",
+  {# Use ISO 8601 datetimes. Prefer page.date when available, else fallback to site.buildDate #}
+  "dateCreated": "{{ gitDates.get('src/about.md') or site.buildDate }}",
+  "dateModified": "{% if page.date and page.date != 'Last Modified' %}{{ page.date | isoDate }}{% else %}{{ site.buildDate }}{% endif %}",
   "mainEntity": {
       "@type": "Person",
       "name": "{{ site.author }}",

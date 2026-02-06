@@ -8,6 +8,7 @@
 ],
 "datePublished": "{{ date | isoDate }}",
 "dateModified": "{{ date | isoDate }}",
+"dateCreated": "{% if date %}{{ date | isoDate }}{% else %}{{ gitDates.get(page.inputPath) or site.buildDate }}{% endif %}",
 "inLanguage": "en-US",
 "author": [{
     "@type": "Person",

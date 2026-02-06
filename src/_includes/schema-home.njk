@@ -1,8 +1,9 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "WebSite",
-  "url": "{{ site.url }}",
+  "@type": "WebSite",  {# Use ISO 8601 datetimes. Prefer page.date when available, else fallback to site.buildDate #}
+  "dateCreated": "{{ gitDates.get('src/index.njk') or site.buildDate }}",
+  "dateModified": "{{ gitDates.get('src/index.njk') or site.buildDate }}",  "url": "{{ site.url }}",
   "name": "{{ site.name }}",
   "alternateName": "The Kinky Coder Blog",
   "description": "{{ site.description }}",
